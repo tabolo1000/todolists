@@ -1,11 +1,13 @@
-import React, {FC} from "react";
+import React, { FC } from "react";
+import { FilterType } from "./types/todolist";
 
 type propsType = {
-    title: string
+    title: FilterType
+    onClick: (filter:FilterType) => void
 }
 
-export const Button: FC<propsType> = ({title}) => {
+export const Button: FC<propsType> = ({ title, onClick }) => {
     return (
-        <button>{title}</button>
+        <button onClick={onClick.bind({}, title)}>{title}</button>
     )
 }

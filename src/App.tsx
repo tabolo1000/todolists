@@ -1,42 +1,69 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
-import {v4} from "uuid";
-import {Todolist} from "./Todolist";
+import { v1, v4 } from "uuid";
+import { Todolist } from "./components/todolist/Todolist";
+import { TaskType } from './types/Task';
+import { FilterType } from './types/todolist';
+import styled from 'styled-components';
 
 
-export type TaskType = {
-    id: number,
-    title: string,
-    isDone: boolean,
+type TasksType = {
+    [x: string]: Array<TaskType>
 }
+
+type TodolistType = {
+    id: string;
+    title: string;
+    filter: FilterType
+}
+
+let todolistId = v1()
+
+const initialTasks: TasksType = {
+    [todolistId]: [
+        { id: 1, title: 'HTML&CSS', isDone: true },
+        { id: 2, title: 'JS', isDone: true },
+        { id: 3, title: 'ReactJS', isDone: false },
+        { id: 4, title: 'Redux', isDone: false },
+    ],
+
+}
+
+
+const initialTodolists: Array<TodolistType> = [
+    { id: todolistId, title: "Technologes", filter: "All" }
+]
 
 
 function App() {
-    console.log(crypto.randomUUID())
-    console.log(v4());
+    const [todolists, setTodolist] = useState<Array<TodolistType>>(initialTodolists)
+    const [tasks, setTasks] = useState<TasksType>(initialTasks)
+    const date: Date = new Date();
 
-    const date: Date= new Date();
+    function changeFilter(todolistsId: string, filter: FilterType) {
+        setTodolist(todolists.map((el: TodolistType) => {
+           return (el.id === todolistId) ? { ...el, filter } : el
+        }))
+    }
 
-    const tasks1: TaskType[] = [
-        {id: 1, title: 'HTML&CSS', isDone: true},
-        {id: 2, title: 'JS', isDone: true},
-        {id: 3, title: 'ReactJS', isDone: false},
-        { id: 4, title: 'Redux', isDone: false },
-    ]
 
-    const tasks2: TaskType[] = [
-        {id: 1, title: 'Hello world', isDone: true},
-        {id: 2, title: 'I am Happy', isDone: false},
-        {id: 3, title: 'Yo', isDone: false},
-    ]
+    const listTodolists = todolists.map(el => {
+        return <Todolist id = {el.id} changeFilter = {changeFilter} title={el.title} tasks={tasks[el.id]} filter={el.filter} />
+    })
 
     return (
-        <div>
-            <Todolist title='Hello world' tasks={tasks1} date = {date}/>
-            <Todolist title='Hello world' tasks={tasks2}/>
-        </div>
+        <MainApp>
+            {listTodolists}
+        </MainApp>
     )
 }
+
+const MainApp = styled.div`
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
 
 export default App;
 

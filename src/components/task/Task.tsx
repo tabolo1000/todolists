@@ -1,5 +1,5 @@
 import React, {FC} from "react";
-import {TaskType} from "./App";
+import {TaskType} from "../../types/Task";
 
 export const Task: FC<TaskType> = ({
                                 title,
