@@ -5,6 +5,7 @@ import { Todolist } from "./components/todolist/Todolist";
 import { TaskType } from './types/Task';
 import { FilterType } from './types/todolist';
 import styled from 'styled-components';
+import { TitleInput } from './components/titleInput/TitleInput';
 
 
 type TasksType = {
@@ -17,7 +18,8 @@ type TodolistType = {
     filter: FilterType
 }
 
-let todolistId = v1()
+let todolistId = v1();
+let todolistId2 = v1()
 
 const initialTasks: TasksType = {
     [todolistId]: [
@@ -26,12 +28,19 @@ const initialTasks: TasksType = {
         { id: v1(), title: 'ReactJS', isDone: false },
         { id: v1(), title: 'Redux', isDone: false },
     ],
+    [todolistId2]: [
+        { id: v1(), title: 'HTML&CSS 1', isDone: true },
+        { id: v1(), title: 'JS 1', isDone: true },
+        { id: v1(), title: 'ReactJS 1', isDone: false },
+        { id: v1(), title: 'Redux 1', isDone: false },
+    ],
 
 }
 
 
 const initialTodolists: Array<TodolistType> = [
-    { id: todolistId, title: "Technologes", filter: "All" }
+    { id: todolistId, title: "Technologes", filter: "All" },
+    { id: todolistId2, title: "ui", filter: "All" }
 ]
 
 
@@ -40,7 +49,7 @@ function App() {
     const [tasks, setTasks] = useState<TasksType>(initialTasks)
     const date: Date = new Date();
 
-    function changeFilter(todolistsId: string, filter: FilterType) {
+    function changeFilter(todolistId: string, filter: FilterType) {
         setTodolist(todolists.map((el: TodolistType) => {
             return (el.id === todolistId) ? { ...el, filter } : el
         }))
@@ -57,6 +66,29 @@ function App() {
         })
     }
 
+    /* todolists method */
+    const removeTodolist = (todolistId: string) => {
+        setTodolist(todolists.filter((el: TodolistType) => (el.id !== todolistId)
+        ))
+    }
+    const createTodolist = (title: string) => {
+        const id = v1();
+        setTodolist([
+            ...todolists,
+            {
+                id,
+                title,
+                filter: 'All'
+            }
+        ])
+        setTasks({
+            ...tasks,
+            [id]: [],
+        })
+
+    }
+
+    /* task method */
     const removeTask = (todolistId: string, taskId: string) => {
         setTasks({
             ...tasks,
@@ -87,6 +119,7 @@ function App() {
     const listTodolists = todolists.map(el => {
         return (
             <Todolist
+                key={el.id}
                 id={el.id}
                 title={el.title}
                 filter={el.filter}
@@ -98,18 +131,28 @@ function App() {
                 removeTask={removeTask}
                 changeStatus={changeStatus}
                 changeTitleTask={changeTitleTask}
+                removeTodolist={removeTodolist}
             />
         )
     })
 
     return (
         <MainApp>
-            {listTodolists}
+            <TitleInput onClick={createTodolist}></TitleInput>
+            <Board>
+                {listTodolists}
+            </Board>
         </MainApp>
     )
 }
 
+
 const MainApp = styled.div`
+    width: 80%;
+    padding: 20px;
+    margin: 0 auto;
+`
+const Board = styled.div`
     height: 100vh;
     display: flex;
     justify-content: center;

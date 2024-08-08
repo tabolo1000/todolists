@@ -1,15 +1,9 @@
 import React, { ChangeEvent, FC, useState } from "react";
-import { TaskType } from "../../types/Task";
+import { TaskProps, TaskType } from "../../types/Task";
 import styled from "styled-components";
 
 
-export type TaskProps = TaskType & {
-    todolistId: string;
 
-    removeTask: (todolistId: string, taskId: string) => void;
-    changeStatus: (todolistId: string, taskId: string, isDone: boolean) => void;
-    changeTitleTask: (todolistId: string, taskId: string, title: string) => void;
-}
 
 export const Task: FC<TaskProps> = ({
     id,
@@ -37,7 +31,10 @@ export const Task: FC<TaskProps> = ({
     return (
         <ListItem>
             <div>
-                <input onChange={onChangeStatus.bind({}, id, !isDone)} type="checkbox" checked={isDone} />
+                <input
+                    onChange={onChangeStatus.bind({}, id, !isDone)}
+                    type="checkbox" checked={isDone}
+                />
                 {
                     (activeInput)
                         ? <input

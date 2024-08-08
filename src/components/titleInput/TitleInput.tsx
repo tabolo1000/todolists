@@ -1,47 +1,56 @@
 import { ChangeEvent, FC, useState, KeyboardEvent } from "react"
 
 type TitleInputProps = {
-    onAddTaskInput: (title: string) => void;
+    onClick: (title: string) => void;
 }
 
 export const TitleInput: FC<TitleInputProps> = ({
-    onAddTaskInput,
+    onClick,
 }) => {
     const [title, setTitle] = useState<string>('')
+    const [error, setError] = useState<string | null>(null)
 
     const handlerTypingTitle = (e: ChangeEvent<HTMLInputElement>) => {
-        if(e.target.value){
-            setTitle(e.target.value)
-        }
-        
-        
+        setError("")
+        setTitle(e.target.value)
     }
     const onClickHandler = () => {
-        if (title.trim()) {
+        const correctTitle = title.trim()
+        if (!correctTitle) {
+            setError("Your title have only spaces!")
+        }
+        if (correctTitle) {
             setTitle("");
-            onAddTaskInput(title)
+            onClick(title)
         }
     }
 
     const onKeyHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        if(e.key === "Enter"){
+        if (e.key === "Enter") {
             onClickHandler()
         }
-        
+
     }
 
     return (
         <div>
             <input
+                autoFocus={false}
                 placeholder="Put your title!"
                 onChange={(e) => handlerTypingTitle(e)}
                 onKeyDown={e => onKeyHandler(e)}
                 value={title}
-                type="text" />
+                type="text"
+                style={error ? { border: "2px solid red" } : {}}
+            />
             <button
                 disabled={!title}
                 onClick={onClickHandler}
             >+</button>
+            <div>
+                {(error && <span style={{ color: "red" }}>{error}</span>)}
+            </div>
+
         </div>
     )
 }

@@ -22,7 +22,8 @@ export const Todolist: FC<TodolistProps> = ({
   changeFilter,
   removeTask,
   changeStatus,
-  changeTitleTask
+  changeTitleTask,
+  removeTodolist,
 }) => {
   switch (filter) {
     case (filterValue.active): {
@@ -56,17 +57,25 @@ export const Todolist: FC<TodolistProps> = ({
 
   /* ----handlers----- */
 
-  const onClickFilter = (filter: FilterType) => {
+  const onClickFilter = (id: string, filter: FilterType) => {
     changeFilter(id, filter)
   }
   const onAddTaskInput = (title: string) => {
     addTask(id, title)
   }
 
+  const removeTodolistHandler = (todolistId: string) => {
+    removeTodolist(id)
+  }
+
   return (
     <div>
-      <h3>{title}</h3>
-      <TitleInput onAddTaskInput={onAddTaskInput} />
+      <div>
+        <h3 style={{ display: "inline-block" }}>{title}</h3>
+        <button onClick={removeTodolistHandler.bind({}, id)}>X</button>
+      </div>
+
+      <TitleInput onClick={onAddTaskInput} />
       {
         (taskList.length)
           ? <UnorderedList>{taskList}</UnorderedList>
@@ -77,15 +86,15 @@ export const Todolist: FC<TodolistProps> = ({
       }
       <div>
         <Button
-          onClick={onClickFilter}
+          onClick={() => onClickFilter(id, filterValue.all)}
           title={filterValue.all}
         />
         <Button
-          onClick={onClickFilter}
+          onClick={() => onClickFilter(id, filterValue.active)}
           title={filterValue.active}
         />
         <Button
-          onClick={onClickFilter}
+          onClick={() => onClickFilter(id, filterValue.completed)}
           title={filterValue.completed}
         />
       </div>
