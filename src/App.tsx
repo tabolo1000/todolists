@@ -21,10 +21,10 @@ let todolistId = v1()
 
 const initialTasks: TasksType = {
     [todolistId]: [
-        { id: 1, title: 'HTML&CSS', isDone: true },
-        { id: 2, title: 'JS', isDone: true },
-        { id: 3, title: 'ReactJS', isDone: false },
-        { id: 4, title: 'Redux', isDone: false },
+        { id: v1(), title: 'HTML&CSS', isDone: true },
+        { id: v1(), title: 'JS', isDone: true },
+        { id: v1(), title: 'ReactJS', isDone: false },
+        { id: v1(), title: 'Redux', isDone: false },
     ],
 
 }
@@ -42,13 +42,64 @@ function App() {
 
     function changeFilter(todolistsId: string, filter: FilterType) {
         setTodolist(todolists.map((el: TodolistType) => {
-           return (el.id === todolistId) ? { ...el, filter } : el
+            return (el.id === todolistId) ? { ...el, filter } : el
         }))
     }
 
 
+    const addTask = (todolistId: string, title: string) => {
+        setTasks({
+            ...tasks,
+            [todolistId]: [
+                ...tasks[todolistId],
+                { id: v1(), title, isDone: false }
+            ]
+        })
+    }
+
+    const removeTask = (todolistId: string, taskId: string) => {
+        setTasks({
+            ...tasks,
+            [todolistId]: tasks[todolistId].filter(el => el.id !== taskId),
+        })
+    }
+
+    const changeStatus = (todolistId: string, taskId: string, isDone: boolean) => {
+        setTasks({
+            ...tasks,
+            [todolistId]: tasks[todolistId].map((el: TaskType) => {
+                return (
+                    (el.id === taskId) ? { ...el, isDone } : el
+                )
+            })
+        })
+    }
+    const changeTitleTask = (todolistId: string, taskId: string, title: string) => {
+        setTasks({
+            ...tasks,
+            [todolistId]: tasks[todolistId].map((el: TaskType) => {
+                return (el.id === taskId) ? { ...el, title } : el
+            })
+        })
+    }
+
+
     const listTodolists = todolists.map(el => {
-        return <Todolist id = {el.id} changeFilter = {changeFilter} title={el.title} tasks={tasks[el.id]} filter={el.filter} />
+        return (
+            <Todolist
+                id={el.id}
+                title={el.title}
+                filter={el.filter}
+
+                tasks={tasks[el.id]}
+
+                addTask={addTask}
+                changeFilter={changeFilter}
+                removeTask={removeTask}
+                changeStatus={changeStatus}
+                changeTitleTask={changeTitleTask}
+            />
+        )
     })
 
     return (
