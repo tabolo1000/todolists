@@ -37,7 +37,6 @@ const initialTasks: TasksType = {
 
 }
 
-
 const initialTodolists: Array<TodolistType> = [
     { id: todolistId, title: "Technologes", filter: "All" },
     { id: todolistId2, title: "ui", filter: "All" }
@@ -49,22 +48,7 @@ function App() {
     const [tasks, setTasks] = useState<TasksType>(initialTasks)
     const date: Date = new Date();
 
-    function changeFilter(todolistId: string, filter: FilterType) {
-        setTodolist(todolists.map((el: TodolistType) => {
-            return (el.id === todolistId) ? { ...el, filter } : el
-        }))
-    }
 
-
-    const addTask = (todolistId: string, title: string) => {
-        setTasks({
-            ...tasks,
-            [todolistId]: [
-                ...tasks[todolistId],
-                { id: v1(), title, isDone: false }
-            ]
-        })
-    }
 
     /* todolists method */
     const removeTodolist = (todolistId: string) => {
@@ -87,6 +71,14 @@ function App() {
         })
 
     }
+    function changeFilter(todolistId: string, filter: FilterType) {
+        setTodolist(todolists.map((el: TodolistType) => {
+            return (el.id === todolistId) ? { ...el, filter } : el
+        }))
+    }
+    const changeTitleTodolist = (todolistId: string, title: string) => {
+        setTodolist(todolists.map((el: TodolistType) => (el.id === todolistId) ? { ...el, title } : el))
+    }
 
     /* task method */
     const removeTask = (todolistId: string, taskId: string) => {
@@ -95,7 +87,15 @@ function App() {
             [todolistId]: tasks[todolistId].filter(el => el.id !== taskId),
         })
     }
-
+    const addTask = (todolistId: string, title: string) => {
+        setTasks({
+            ...tasks,
+            [todolistId]: [
+                ...tasks[todolistId],
+                { id: v1(), title, isDone: false }
+            ]
+        })
+    }
     const changeStatus = (todolistId: string, taskId: string, isDone: boolean) => {
         setTasks({
             ...tasks,
@@ -126,12 +126,14 @@ function App() {
 
                 tasks={tasks[el.id]}
 
-                addTask={addTask}
+                removeTodolist={removeTodolist}
                 changeFilter={changeFilter}
+
+                addTask={addTask}
                 removeTask={removeTask}
                 changeStatus={changeStatus}
                 changeTitleTask={changeTitleTask}
-                removeTodolist={removeTodolist}
+                changeTitleTodolist={changeTitleTodolist}
             />
         )
     })
@@ -140,7 +142,7 @@ function App() {
         <MainApp>
             <TitleInput onClick={createTodolist}></TitleInput>
             <Board>
-                {listTodolists}
+                {(listTodolists.length)? listTodolists: "Add todolist!" }
             </Board>
         </MainApp>
     )

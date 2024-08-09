@@ -14,6 +14,15 @@ export const TitleInput: FC<TitleInputProps> = ({
         setError("")
         setTitle(e.target.value)
     }
+
+    const onKeyHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            onClickHandler()
+        }
+
+    }
+
+
     const onClickHandler = () => {
         const correctTitle = title.trim()
         if (!correctTitle) {
@@ -23,13 +32,6 @@ export const TitleInput: FC<TitleInputProps> = ({
             setTitle("");
             onClick(title)
         }
-    }
-
-    const onKeyHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-            onClickHandler()
-        }
-
     }
 
     return (

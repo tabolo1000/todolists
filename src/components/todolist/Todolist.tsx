@@ -5,6 +5,7 @@ import { Button } from "../../Button";
 import { FilterType, TodolistProps } from "../../types/todolist";
 import { TitleInput } from "../titleInput/TitleInput"
 import styled from "styled-components";
+import { SpanInputItem } from "../spanInputItem/SpanInputItem";
 
 enum filterValue {
   all = "All",
@@ -24,6 +25,7 @@ export const Todolist: FC<TodolistProps> = ({
   changeStatus,
   changeTitleTask,
   removeTodolist,
+  changeTitleTodolist,
 }) => {
   switch (filter) {
     case (filterValue.active): {
@@ -67,11 +69,14 @@ export const Todolist: FC<TodolistProps> = ({
   const removeTodolistHandler = (todolistId: string) => {
     removeTodolist(id)
   }
+  const changeTitleTodolistHandler = (title:string) => {
+    changeTitleTodolist(id, title)
+  }
 
   return (
     <div>
       <div>
-        <h3 style={{ display: "inline-block" }}>{title}</h3>
+        <SpanInputItem onClick={changeTitleTodolistHandler} title={title} ></SpanInputItem>
         <button onClick={removeTodolistHandler.bind({}, id)}>X</button>
       </div>
 

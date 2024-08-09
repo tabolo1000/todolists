@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FC, useState } from "react";
+import React, { ChangeEvent, FC, useState, KeyboardEvent } from "react";
 import { TaskProps, TaskType } from "../../types/Task";
 import styled from "styled-components";
 
@@ -24,34 +24,60 @@ export const Task: FC<TaskProps> = ({
     const onChangeStatus = (taskId: string, isDone: boolean) => {
         changeStatus(todolistId, taskId, isDone)
     }
-    const onChangeTitleTask = (taskId: string, title: string) => {
-        changeTitleTask(todolistId, taskId, title)
+
+    const changeTitleTaskHandler = (title: string) => {
+        changeTitleTask(todolistId, id, title)
     }
+
 
     return (
         <ListItem>
-            <div>
-                <input
-                    onChange={onChangeStatus.bind({}, id, !isDone)}
-                    type="checkbox" checked={isDone}
-                />
-                {
-                    (activeInput)
-                        ? <input
-                            autoFocus
-                            onChange={(e) => setTitle(e.target.value)}
-                            onBlur={() => { onChangeTitleTask(id, newTitle); setActiveInput(!activeInput) }}
-                            type="text"
-                            placeholder="Puting your title!" />
-                        : <span
-                            onDoubleClick={setActiveInput.bind({}, !activeInput)}
-                        >{title}</span>
-                }
-
-            </div>
-            <button onClick={onRemoveTask.bind({}, id)}>X</button>
+            <input checked={isDone} type="checkbox" name="checkbox" onClick={() => onChangeStatus(id, !isDone)}/>
+            <SpanInputItem onClick={changeTitleTaskHandler} title={title}></SpanInputItem>
+            <button onClick={() => onRemoveTask(id)} >X</button>
         </ListItem>
     )
+}
+
+type InputProps = {
+    onClick: (title: string) => void,
+    title: string
+}
+
+const SpanInputItem = ({
+    onClick,
+    title,
+
+}: InputProps) => {
+    const [newTitle, setTitle] = useState<string>('');
+    const [activeInput, setActiveInput] = useState<boolean>(false);
+
+    /* ----handlers----- */
+    const onBlurSetTitleHandler = () => {
+        onClick(newTitle);
+        setActiveInput(!activeInput)
+    }
+    const onKeyHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            onBlurSetTitleHandler()
+        }
+
+    }
+    return (
+
+        (activeInput)
+            ? <input
+                autoFocus
+                onChange={(e) => setTitle(e.target.value)}
+                onBlur={onBlurSetTitleHandler}
+                onKeyDown={(e) => onKeyHandler(e)}
+                type="text"
+                placeholder="Puting your title!" />
+            : <span
+                onDoubleClick={setActiveInput.bind({}, !activeInput)}
+            >{title}</span>
+    )
+
 }
 
 
