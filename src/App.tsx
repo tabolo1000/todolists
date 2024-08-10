@@ -17,18 +17,18 @@ import { Container, Fab, Grid, Paper } from '@mui/material';
 
 
 
-type TasksType = {
+export type TasksType = {
     [x: string]: Array<TaskType>
 }
 
-type TodolistType = {
+export type TodolistType = {
     id: string;
     title: string;
     filter: FilterType
 }
 
 let todolistId = v1();
-let todolistId2 = v1()
+let todolistId2 = v1();
 
 const initialTasks: TasksType = {
     [todolistId]: [
