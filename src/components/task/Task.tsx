@@ -1,7 +1,12 @@
 import React, { ChangeEvent, FC, useState, KeyboardEvent } from "react";
 import { TaskProps, TaskType } from "../../types/Task";
 import styled from "styled-components";
-
+import { Button, Checkbox } from "@mui/material";
+import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import { SpanInputItem } from "../spanInputItem/SpanInputItem";
+import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
+import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
 
 
 
@@ -18,8 +23,8 @@ export const Task: FC<TaskProps> = ({
     const [newTitle, setTitle] = useState<string>('');
 
     /* ----handlers----- */
-    const onRemoveTask = (taskId: string) => {
-        removeTask(todolistId, taskId)
+    const onRemoveTask = () => {
+        removeTask(todolistId, id)
     }
     const onChangeStatus = (taskId: string, isDone: boolean) => {
         changeStatus(todolistId, taskId, isDone)
@@ -28,57 +33,42 @@ export const Task: FC<TaskProps> = ({
     const changeTitleTaskHandler = (title: string) => {
         changeTitleTask(todolistId, id, title)
     }
-
+    /* checked={isDone} type="checkbox" name="checkbox" onClick={() => onChangeStatus(id, !isDone)}*/
 
     return (
         <ListItem>
-            <input checked={isDone} type="checkbox" name="checkbox" onClick={() => onChangeStatus(id, !isDone)}/>
-            <SpanInputItem onClick={changeTitleTaskHandler} title={title}></SpanInputItem>
-            <button onClick={() => onRemoveTask(id)} >X</button>
+            <Checkbox
+                color="primary"
+
+                checked={isDone}
+                onChange={() => onChangeStatus(id, !isDone)}
+                size="medium"
+                icon={<AddBoxOutlinedIcon color="success" />}
+                checkedIcon={<AddBoxIcon color="primary" />}
+            />
+            <SpanInputItem isDone={isDone} onClick={changeTitleTaskHandler} title={title}></SpanInputItem>
+            <RemoveButton onClick={onRemoveTask} />
         </ListItem>
     )
 }
 
-type InputProps = {
-    onClick: (title: string) => void,
-    title: string
+
+type ButtonRemoveType = {
+    onClick: () => void
 }
 
-const SpanInputItem = ({
-    onClick,
-    title,
-
-}: InputProps) => {
-    const [newTitle, setTitle] = useState<string>('');
-    const [activeInput, setActiveInput] = useState<boolean>(false);
-
-    /* ----handlers----- */
-    const onBlurSetTitleHandler = () => {
-        onClick(newTitle);
-        setActiveInput(!activeInput)
-    }
-    const onKeyHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-            onBlurSetTitleHandler()
-        }
-
-    }
+export const RemoveButton = ({ onClick }: ButtonRemoveType) => {
     return (
-
-        (activeInput)
-            ? <input
-                autoFocus
-                onChange={(e) => setTitle(e.target.value)}
-                onBlur={onBlurSetTitleHandler}
-                onKeyDown={(e) => onKeyHandler(e)}
-                type="text"
-                placeholder="Puting your title!" />
-            : <span
-                onDoubleClick={setActiveInput.bind({}, !activeInput)}
-            >{title}</span>
+        <Button
+            size="small"
+            color="error"
+            onClick={onClick}
+        ><HighlightOffOutlinedIcon />
+        </Button>
     )
-
 }
+
+
 
 
 
@@ -88,6 +78,8 @@ const ListItem = styled.li`
     div > span{
         padding: 0 10px
     }
+    text-align: center;
+    line-height: 50px;
 `
 
 

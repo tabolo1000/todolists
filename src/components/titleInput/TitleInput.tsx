@@ -1,4 +1,7 @@
+import { Button, TextField } from "@mui/material";
 import { ChangeEvent, FC, useState, KeyboardEvent } from "react"
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+
 
 type TitleInputProps = {
     onClick: (title: string) => void;
@@ -10,12 +13,12 @@ export const TitleInput: FC<TitleInputProps> = ({
     const [title, setTitle] = useState<string>('')
     const [error, setError] = useState<string | null>(null)
 
-    const handlerTypingTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    const handlerTypingTitle = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setError("")
         setTitle(e.target.value)
     }
 
-    const onKeyHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+    const onKeyHandler = (e: KeyboardEvent<HTMLDivElement>) => {
         if (e.key === "Enter") {
             onClickHandler()
         }
@@ -36,23 +39,28 @@ export const TitleInput: FC<TitleInputProps> = ({
 
     return (
         <div>
-            <input
+            <TextField
+                label="Type title!"
+                size="small"
+                error={error ? true: false}
                 autoFocus={false}
-                placeholder="Put your title!"
                 onChange={(e) => handlerTypingTitle(e)}
                 onKeyDown={e => onKeyHandler(e)}
                 value={title}
                 type="text"
-                style={error ? { border: "2px solid red" } : {}}
+                helperText={error}
             />
-            <button
-                disabled={!title}
+            <Button
+                size="large"
+                variant="outlined"
+                sx={{minWidth: "1px !impotent"}}
+
+                disabled={!title || !!error}
                 onClick={onClickHandler}
-            >+</button>
-            <div>
-                {(error && <span style={{ color: "red" }}>{error}</span>)}
-            </div>
+            ><AddOutlinedIcon/></Button>
 
         </div>
     )
 }
+
+

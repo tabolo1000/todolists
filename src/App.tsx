@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './App.css';
 import { v1, v4 } from "uuid";
 import { Todolist } from "./components/todolist/Todolist";
@@ -6,6 +6,15 @@ import { TaskType } from './types/Task';
 import { FilterType } from './types/todolist';
 import styled from 'styled-components';
 import { TitleInput } from './components/titleInput/TitleInput';
+import fone from './assets/image/image.webp'
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Container, Fab, Grid, Paper } from '@mui/material';
+
 
 
 type TasksType = {
@@ -39,7 +48,7 @@ const initialTasks: TasksType = {
 
 const initialTodolists: Array<TodolistType> = [
     { id: todolistId, title: "Technologes", filter: "All" },
-    { id: todolistId2, title: "ui", filter: "All" }
+    { id: todolistId2, title: "UI", filter: "All" }
 ]
 
 
@@ -58,12 +67,12 @@ function App() {
     const createTodolist = (title: string) => {
         const id = v1();
         setTodolist([
-            ...todolists,
             {
                 id,
                 title,
                 filter: 'All'
-            }
+            },
+            ...todolists
         ])
         setTasks({
             ...tasks,
@@ -118,48 +127,104 @@ function App() {
 
     const listTodolists = todolists.map(el => {
         return (
-            <Todolist
-                key={el.id}
-                id={el.id}
-                title={el.title}
-                filter={el.filter}
+            <Grid item xs={12} sm={7} md={5} lg={4} >
+                <Todolist
+                    key={el.id}
+                    id={el.id}
+                    title={el.title}
+                    filter={el.filter}
 
-                tasks={tasks[el.id]}
+                    tasks={tasks[el.id]}
 
-                removeTodolist={removeTodolist}
-                changeFilter={changeFilter}
+                    removeTodolist={removeTodolist}
+                    changeFilter={changeFilter}
 
-                addTask={addTask}
-                removeTask={removeTask}
-                changeStatus={changeStatus}
-                changeTitleTask={changeTitleTask}
-                changeTitleTodolist={changeTitleTodolist}
-            />
+                    addTask={addTask}
+                    removeTask={removeTask}
+                    changeStatus={changeStatus}
+                    changeTitleTask={changeTitleTask}
+                    changeTitleTodolist={changeTitleTodolist}
+                />
+            </Grid>
         )
     })
 
+
     return (
         <MainApp>
-            <TitleInput onClick={createTodolist}></TitleInput>
-            <Board>
-                {(listTodolists.length)? listTodolists: "Add todolist!" }
-            </Board>
+            <AppBarStyled
+                position="fixed" >
+                <Toolbar>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{ mr: 2 }}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        News
+                    </Typography>
+                    <Button color="inherit">Login</Button>
+                </Toolbar>
+            </AppBarStyled>
+            <ContainerApp fixed  >
+                <Grid
+                    p={"5px 0 20px"}
+                    container>
+                    <Grid item >
+                        <TitleInputArea>
+                            <TitleInput onClick={createTodolist}></TitleInput>
+                        </TitleInputArea>
+                    </Grid>
+                </Grid>
+                <Grid container
+                    padding={1}
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={1}
+                >
+                    {(listTodolists.length) ? listTodolists : <span style={{ textShadow: "5px 5px 5px rgba(0, 0, 0, 0.5)", color: "white", fontWeight: 800, fontSize: "50px" }}>Add todolist!</span>}
+                </Grid>
+
+            </ContainerApp>
         </MainApp>
     )
 }
 
+const AppBarStyled = styled(AppBar)({
+    backgroundColor: "#bdd3d59d !important",
+    borderRadius: "0 0 10px 10px"
+})
+
+const TitleInputArea = styled(Paper)({
+    backgroundColor: "#bdd3d59d !important",
+    width: 280,
+    padding: 10,
+    margin: "70px 0 0",
+})
+
+
 
 const MainApp = styled.div`
-    width: 80%;
-    padding: 20px;
-    margin: 0 auto;
+    min-height: 100vh;
+    background-image: url(${fone});
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover ;
+    object-fit: cover;
 `
-const Board = styled.div`
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`
+
+const ContainerApp = styled(Container)({
+    padding: "20px 0",
+    border: "2px solid #0000005a",
+    backgroundColor: "#0000005a",
+    height: "100vh",
+})
+
 
 export default App;
 

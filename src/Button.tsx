@@ -1,5 +1,6 @@
 import React, { FC } from "react";
 import { FilterType } from "./types/todolist";
+import { ButtonBase } from "@mui/material";
 
 type propsType = {
     title: FilterType
@@ -8,8 +9,8 @@ type propsType = {
 
 export const Button: FC<propsType> = ({ title, onClick }) => {
     return (
-        <button
+        <ButtonBase
             onClick={onClick.bind({}, title)}
-        >{title}</button>
+        >{title}</ButtonBase>
     )
 }
