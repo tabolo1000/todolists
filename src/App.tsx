@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useReducer, useState } from 'react';
 import './App.css';
 import { v1, v4 } from "uuid";
 import { Todolist } from "./components/todolist/Todolist";
@@ -14,6 +14,8 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Container, Fab, Grid, Paper } from '@mui/material';
+import { changeFilterTodolistAC, changeTitleTodolistAC, createTodolistAC, ITodolistReducer, removeTodolistAC, todolistsReducer } from './components/reducers/todolists/todolistsReducer';
+import { addTaskAC, changeStatusAC, changeTitleTaskAC, ITaskReducer, removeTaskAC, setTodolistTaskAC, taskReducer } from './components/reducers/tasks/tasksReducer';
 
 
 
@@ -53,76 +55,45 @@ const initialTodolists: Array<TodolistType> = [
 
 
 function App() {
-    const [todolists, setTodolist] = useState<Array<TodolistType>>(initialTodolists)
-    const [tasks, setTasks] = useState<TasksType>(initialTasks)
+    //const [todolists, setTodolist] = useState<Array<TodolistType>>(initialTodolists)
+    //const [tasks, setTasks] = useState<TasksType>(initialTasks)
+
+    const [todolists, dispatchTodolist] = useReducer<ITodolistReducer>(todolistsReducer, initialTodolists)
+    const [tasks, dispatchTask] = useReducer<ITaskReducer>(taskReducer ,initialTasks)
     const date: Date = new Date();
 
 
 
     /* todolists method */
     const removeTodolist = (todolistId: string) => {
-        setTodolist(todolists.filter((el: TodolistType) => (el.id !== todolistId)
-        ))
+        dispatchTodolist(removeTodolistAC(todolistId))
+        //  setTodolist(todolists.filter((el: TodolistType) => (el.id !== todolistId) ))
     }
     const createTodolist = (title: string) => {
         const id = v1();
-        setTodolist([
-            {
-                id,
-                title,
-                filter: 'All'
-            },
-            ...todolists
-        ])
-        setTasks({
-            ...tasks,
-            [id]: [],
-        })
-
+        dispatchTodolist(createTodolistAC(id, title))
+        dispatchTask(setTodolistTaskAC(id))
     }
-    function changeFilter(todolistId: string, filter: FilterType) {
-        setTodolist(todolists.map((el: TodolistType) => {
-            return (el.id === todolistId) ? { ...el, filter } : el
-        }))
+    function changeFilterTodolist(todolistId: string, filter: FilterType) {
+        dispatchTodolist(changeFilterTodolistAC(todolistId, filter));
     }
     const changeTitleTodolist = (todolistId: string, title: string) => {
-        setTodolist(todolists.map((el: TodolistType) => (el.id === todolistId) ? { ...el, title } : el))
+        dispatchTodolist(changeTitleTodolistAC(todolistId, title))
     }
 
     /* task method */
     const removeTask = (todolistId: string, taskId: string) => {
-        setTasks({
-            ...tasks,
-            [todolistId]: tasks[todolistId].filter(el => el.id !== taskId),
-        })
-    }
+        dispatchTask(removeTaskAC(todolistId, taskId));
+    };
     const addTask = (todolistId: string, title: string) => {
-        setTasks({
-            ...tasks,
-            [todolistId]: [
-                ...tasks[todolistId],
-                { id: v1(), title, isDone: false }
-            ]
-        })
-    }
+        dispatchTask(addTaskAC(todolistId, title));
+    };
     const changeStatus = (todolistId: string, taskId: string, isDone: boolean) => {
-        setTasks({
-            ...tasks,
-            [todolistId]: tasks[todolistId].map((el: TaskType) => {
-                return (
-                    (el.id === taskId) ? { ...el, isDone } : el
-                )
-            })
-        })
-    }
+        dispatchTask(changeStatusAC(todolistId, taskId, isDone));
+    };
     const changeTitleTask = (todolistId: string, taskId: string, title: string) => {
-        setTasks({
-            ...tasks,
-            [todolistId]: tasks[todolistId].map((el: TaskType) => {
-                return (el.id === taskId) ? { ...el, title } : el
-            })
-        })
-    }
+        dispatchTask(changeTitleTaskAC(todolistId, taskId, title))
+    };
 
 
     const listTodolists = todolists.map(el => {
@@ -137,7 +108,7 @@ function App() {
                     tasks={tasks[el.id]}
 
                     removeTodolist={removeTodolist}
-                    changeFilter={changeFilter}
+                    changeFilter={changeFilterTodolist}
 
                     addTask={addTask}
                     removeTask={removeTask}
@@ -181,12 +152,14 @@ function App() {
                     </Grid>
                 </Grid>
                 <Grid container
+                    wrap='wrap'
                     padding={1}
                     justifyContent="center"
                     alignItems="center"
                     spacing={1}
+                    minHeight={"50vh"}
                 >
-                    {(listTodolists.length) ? listTodolists : <span style={{ textShadow: "5px 5px 5px rgba(0, 0, 0, 0.5)", color: "white", fontWeight: 800, fontSize: "50px" }}>Add todolist!</span>}
+                    {(listTodolists.length) ? listTodolists : <span style={{ textShadow: "5px 5px 5px rgba(0, 0, 0, 0.5)", color: "white", fontWeight: 800, fontSize: "50px" }}>Pin your first todolist!</span>}
                 </Grid>
 
             </ContainerApp>
@@ -209,20 +182,20 @@ const TitleInputArea = styled(Paper)({
 
 
 const MainApp = styled.div`
-    min-height: 100vh;
     background-image: url(${fone});
     background-attachment: fixed;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover ;
     object-fit: cover;
+    min-height: 100vh;
 `
 
 const ContainerApp = styled(Container)({
     padding: "20px 0",
     border: "2px solid #0000005a",
     backgroundColor: "#0000005a",
-    height: "100vh",
+    minHeight: "100vh",
 })
 
 

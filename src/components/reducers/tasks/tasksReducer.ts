@@ -1,7 +1,7 @@
-import { Todolist } from './../../todolist/Todolist';
 import { TasksType } from "../../../App";
 import { TaskType } from '../../../types/Task';
 import { v1 } from 'uuid';
+import { RemoveTodolistType } from '../todolists/todolistsReducer';
 
 
 enum ACT {
@@ -10,18 +10,18 @@ enum ACT {
     CHANGE_STATUS = "CHANGE_STATUS",
     ADD_TASK = "ADD_TASK",
     REMOVE_TASK = "REMOVE_TASK",
+    REMOVE_TODOLIST = "REMOVE_TODOLIST",
 }
 
-
-type TasksAction = (SetTodolistTaskType | ChangeTitleTaskType |
-    ChangeStatusType | RemoveTaskType | AddTaskType);
-
-interface TaskReducer {
+export interface ITaskReducer {
     (initialState: TasksType, action: TasksAction): TasksType,
 }
 
+type TasksAction = SetTodolistTaskType | ChangeTitleTaskType |
+    ChangeStatusType | RemoveTaskType | AddTaskType | RemoveTodolistType;
 
-export const taskReducer: TaskReducer = (initialState, action) => {
+
+export const taskReducer: ITaskReducer = (initialState, action) => {
     switch (action.type) {
         case ACT.SET_TODOLIST_TASK: {
             return {
@@ -61,6 +61,11 @@ export const taskReducer: TaskReducer = (initialState, action) => {
                 ...initialState,
                 [action.payload.todolistId]: initialState[action.payload.todolistId].filter(el => el.id !== action.payload.taskId),
             }
+        };
+        case 'REMOVE_TODOLIST': {
+            const s = {...initialState};
+            delete s[action.payload.id]
+            return s 
         }
 
         default:
@@ -115,6 +120,7 @@ export const removeTaskAC = (todolistId: string, taskId: string) => {
         }
     } as const
 }
+
 export const addTaskAC = (todolistId: string, title: string) => {
     return {
         type: ACT.ADD_TASK,

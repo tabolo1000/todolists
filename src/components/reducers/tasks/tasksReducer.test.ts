@@ -1,7 +1,7 @@
 import { Todolist } from './../../todolist/Todolist';
 import { v1 } from "uuid"
 import { TasksType, TodolistType } from "../../../App"
-import { createTodolistAC, todolistsReducer } from "../todolists/todolistsReducer";
+import { createTodolistAC, removeTodolistAC, todolistsReducer } from "../todolists/todolistsReducer";
 import { addTaskAC, changeStatusAC, changeTitleTaskAC, removeTaskAC, setTodolistTaskAC, taskReducer } from "./tasksReducer";
 
 
@@ -36,9 +36,8 @@ beforeEach(() => {
 });
 
 
-
 test("add tasks for new todolist", () => {
-    const actionTodolist = createTodolistAC("React");
+    const actionTodolist = createTodolistAC(todolistId, "React");
     const stateTodolist: Array<TodolistType> = todolistsReducer(initialTodolists, actionTodolist);
     const id = stateTodolist[2].id;
 
@@ -46,7 +45,7 @@ test("add tasks for new todolist", () => {
     const stateTasks: TasksType = taskReducer(initialTasks, actionTasks)
 
     expect(stateTasks[id]).not.toBeUndefined();
-    expect(stateTasks[id].length).toBe(0);
+    expect(stateTasks[id]).toHaveLength(0);
 });
 
 
@@ -67,6 +66,9 @@ test("delete the task", () => {
 
 
     expect(firstList).toHaveLength(3);
+    expect(firstList.every(t => t.id !== "1")).toBeTruthy();
+    expect(firstList[0].id).toBeDefined()
+    expect(firstList[3]).not.toBeDefined()
 });
 
 
@@ -86,6 +88,17 @@ test("change title task", () => {
     expect(firstTodolist[2].title).toBe("change_title_test");
     expect(firstTodolist).toHaveLength(4);
     expect(firstTodolist).not.toBeUndefined()
+})
+
+
+
+test("delete todolist task", () => {
+    const action = removeTodolistAC(todolistId);
+
+    const state  = taskReducer(initialTasks, action);
+
+    expect(state[todolistId]).not.toBeDefined();
+    expect(state[todolistId2]).toBeDefined();
 })
 
 
