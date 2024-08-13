@@ -9,8 +9,6 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-
-import { useAppDispatch, useAppSelector } from './store/store';
 import { Todolists } from './components/todolist/Todolists';
 
 
@@ -27,11 +25,9 @@ export type TodolistType = {
 
 
 function App() {
-
-    const todolists = useAppSelector<Array<TodolistType>>(state => state.todolists);
-    const dispatch = useAppDispatch();
+    console.log("App")
     const date: Date = new Date();
-
+    
 
     return (
         <MainApp>

@@ -21,11 +21,10 @@ export const store = legacy_createStore(rootReducer)
 
 export const useAppDispatch = () => useDispatch<Dispatch<RootReducerType>>()
 //export const useAppSelector: TypedUseSelectorHook<StateType> = useSelector
-interface SelectorFunction<S=any> {
-    (selector: (state: StateType) => S):S
+interface SelectorFunction<T=any> {
+    (state: StateType): T;
 }
-
-export const useAppSelector = <S>(selector: (state: StateType) => S) => {
+export const useAppSelector = <S=any>(selector: SelectorFunction<S>) => {
     return useSelector<StateType, S>(selector)
 }
 

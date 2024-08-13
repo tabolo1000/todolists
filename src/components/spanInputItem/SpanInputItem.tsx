@@ -1,5 +1,5 @@
 import { TextField, Typography, TypographyProps } from "@mui/material";
-import { useState, KeyboardEvent, MouseEvent } from "react";
+import { useState, KeyboardEvent, MouseEvent, memo, useCallback, ChangeEvent } from "react";
 import styled from "styled-components";
 
 type InputProps = {
@@ -8,36 +8,41 @@ type InputProps = {
     isDone?: boolean
 }
 
-export const SpanInputItem = ({
+export const SpanInputItem = memo(({
     onClick,
     title,
     isDone,
 
 }: InputProps) => {
+    console.log("span active")
     const [newTitle, setTitle] = useState<string>('');
     const [activeInput, setActiveInput] = useState<boolean>(false);
 
     /* ----handlers----- */
-    const onBlurSetTitleHandler = () => {
+    const onBlurSetTitleHandler = useCallback(
+        () => {
         setActiveInput(!activeInput)
-        debugger
         if (newTitle.trim()) {
             onClick(newTitle);
             return
         }
         onClick(title)
-    }
-    const onKeyHandler = (e: KeyboardEvent<HTMLInputElement | HTMLDivElement>) => {
+    }, [onClick, setActiveInput]);
+    const onKeyHandler = useCallback(
+        (e: KeyboardEvent<HTMLInputElement | HTMLDivElement>) => {
         if (e.key === "Enter") {
             onBlurSetTitleHandler()
         }
-
-    }
-
-    const onDoubleClick = (e: MouseEvent<HTMLSpanElement>) => {
+    }, [onBlurSetTitleHandler]);
+    const onDoubleClick = useCallback(
+        (e: MouseEvent<HTMLSpanElement>) => {
         setActiveInput(!activeInput)
         setTitle(title)
-    }
+    }, [setActiveInput, setTitle]);
+    const changeHandler = useCallback(
+        (e: ChangeEvent<HTMLTextAreaElement>) => 
+            setTitle(e.target.value), [setTitle]);
+
     return (
 
         (activeInput)
@@ -48,22 +53,20 @@ export const SpanInputItem = ({
 
                 value={newTitle}
                 autoFocus
-                onChange={(e) => setTitle(e.target.value)
-                }
+                onChange={changeHandler}
                 onBlur={onBlurSetTitleHandler}
-                onKeyDown={(e) => onKeyHandler(e)}
+                onKeyDown={onKeyHandler}
                 type="text"
                 placeholder="Puting your title!" />
             : <CustomTypography
-                isDone={isDone}
                 lineHeight={3}
-                onDoubleClick={(e) => onDoubleClick(e)}
+                onDoubleClick={onDoubleClick}
                 variant="subtitle2">
                 {title}
             </CustomTypography>
     )
 
-}
+})
 
 const MyTextField = styled(TextField)({
 

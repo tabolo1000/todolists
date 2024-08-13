@@ -5,34 +5,44 @@ import { Todolist } from "./Todolist";
 import { changeFilterTodolistAC, changeTitleTodolistAC, createTodolistAC, removeTodolistAC } from "../reducers/todolists/todolistsReducer";
 import { TitleInput } from "../titleInput/TitleInput";
 import { v1 } from "uuid";
+import { FilterType } from "../../types/todolist";
+import { memo, useCallback, useMemo } from "react";
 
 
 
 
-export const Todolists = () => {
+export const Todolists = memo(() => {
+
     const todolists = useAppSelector<Array<TodolistType>>(state => state.todolists);
     const dispatch = useAppDispatch();
 
-    const listTodolists = todolists.map(({
-        id,
-        title,
-        filter,
-    }: TodolistType) => {
-        return (
-            <Grid item xs={12} sm={7} md={5} lg={4} >
+    console.log("Todolists")
+
+    // hendlers for todolist
+    const onClickSetTitle = useCallback((title: string) => { dispatch(createTodolistAC(v1(), title)) }, [createTodolistAC])
+    const onRemoveTodolist = useCallback((id: string) => dispatch(removeTodolistAC(id)), [removeTodolistAC]);
+    const onChangeFilter = useCallback((id: string, filter: FilterType) => dispatch(changeFilterTodolistAC(id, filter)), [changeFilterTodolistAC]);
+    const onChangeTitleTodolist = useCallback((id: string, title: string) => dispatch(changeTitleTodolistAC(id, title)), [changeTitleTodolistAC]);
+
+    const listTodolists = useMemo(
+        () => todolists.map(({
+            id,
+            title,
+            filter,
+        }: TodolistType) => (
+            <Grid key={id} item xs={12} sm={7} md={5} lg={4} >
                 <Todolist
-                    key={id}
                     id={id}
                     title={title}
                     filter={filter}
 
-                    removeTodolist={() => dispatch(removeTodolistAC(id))}
-                    changeFilter={() => dispatch(changeFilterTodolistAC(id, filter))}
-                    changeTitleTodolist={() => dispatch(changeTitleTodolistAC(id, title))}
+                    removeTodolist={onRemoveTodolist}
+                    changeFilter={onChangeFilter}
+                    changeTitleTodolist={onChangeTitleTodolist}
                 />
             </Grid>
-        )
-    })
+        )), [todolists, onRemoveTodolist, onChangeFilter, onChangeTitleTodolist]
+    )
     return (
         <ContainerApp fixed  >
             <Grid
@@ -40,7 +50,7 @@ export const Todolists = () => {
                 container>
                 <Grid item >
                     <TitleInputArea>
-                        <TitleInput onClick={(title: string) => dispatch(createTodolistAC(v1(), title))}></TitleInput>
+                        <TitleInput onClick={onClickSetTitle}></TitleInput>
                     </TitleInputArea>
                 </Grid>
             </Grid>
@@ -54,10 +64,9 @@ export const Todolists = () => {
             >
                 {(listTodolists.length) ? listTodolists : <span style={{ textShadow: "5px 5px 5px rgba(0, 0, 0, 0.5)", color: "white", fontWeight: 800, fontSize: "50px" }}>Pin your first todolist!</span>}
             </Grid>
-
         </ContainerApp>
     )
-}
+})
 
 
 

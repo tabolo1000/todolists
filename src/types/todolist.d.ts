@@ -9,7 +9,7 @@ export type TodolistProps = {
     filter: FilterType;
 
     date?: Date;
-    
+
     removeTodolist: (todolistId: string) => void;
     changeFilter: (todolistId: string, filter: FilterType) => void;
     changeTitleTodolist: (todolistId: string, title: string) => void;

@@ -90,7 +90,7 @@ export const changeTitleTodolistAC = (id: string, title: string) => {
     } as const;
 };
 
-export const changeFilterTodolistAC = (id: string, filter: FilterType) => {
+export const changeFilterTodolistAC = (id: string, filter: FilterType) =>{
     return {
         type: ACT.CHANGE_FILTER_TODOLIST,
         payload: {

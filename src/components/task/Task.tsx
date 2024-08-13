@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo, useCallback } from "react";
 import { TaskProps } from "../../types/Task";
 import styled from "styled-components";
 import { Button, Checkbox } from "@mui/material";
@@ -9,33 +9,37 @@ import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
 
 
 
-export const Task: FC<TaskProps> = ({
+export const Task: FC<TaskProps> = memo(({
+    id,
     title,
     isDone,
     removeTask,
     changeStatus,
     changeTitleTask
 }) => {
+    console.log('Task')
 
     /* ----handlers----- */
-    const onRemoveTask = () => {
-        removeTask()
-    }
-    const onChangeStatus = (isDone: boolean) => {
-        changeStatus(isDone)
-    }
+    const onRemoveTask = useCallback(
+        () => removeTask(id),
+        [removeTask]
+    )
+    const onChangeStatus = useCallback(
+        (isDone: boolean) =>
+            () => changeStatus(id, isDone),
+        [changeStatus]
+    )
+    const changeTitleTaskHandler = useCallback(
+        (title: string) => changeTitleTask(id, title),
+        [changeTitleTask]
+    )
 
-    const changeTitleTaskHandler = (title: string) => {
-        changeTitleTask(title)
-    }
- 
     return (
         <ListItem>
             <Checkbox
                 color="primary"
-
                 checked={isDone}
-                onChange={() => onChangeStatus(!isDone)}
+                onChange={onChangeStatus(!isDone)}
                 size="medium"
                 icon={<AddBoxOutlinedIcon color="success" />}
                 checkedIcon={<AddBoxIcon color="primary" />}
@@ -45,8 +49,7 @@ export const Task: FC<TaskProps> = ({
         </ListItem>
     )
 }
-
-
+)
 type ButtonRemoveType = {
     onClick: () => void
 }

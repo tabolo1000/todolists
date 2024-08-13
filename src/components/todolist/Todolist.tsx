@@ -1,15 +1,10 @@
-import React, { FC } from "react";
-import { TaskType } from "../../types/Task";
-import { RemoveButton, Task } from "../task/Task";
+import { FC, memo, useCallback } from "react";
+import { RemoveButton } from "../task/Task";
 import { FilterType, TodolistProps } from "../../types/todolist";
-import { TitleInput } from "../titleInput/TitleInput"
 import styled from "styled-components";
 import { SpanInputItem } from "../spanInputItem/SpanInputItem";
 import { Button, Paper } from "@mui/material";
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
-import { useAppDispatch, useAppSelector } from "../../store/store";
-import { TasksType } from "../../App";
-import { addTaskAC, changeStatusAC, changeTitleTaskAC, removeTaskAC } from "../reducers/tasks/tasksReducer";
 import { Tasks } from "../task/Tasks";
 
 export enum filterValue {
@@ -18,7 +13,7 @@ export enum filterValue {
   completed = "Completed",
 }
 
-export const Todolist: FC<TodolistProps> = ({
+export const Todolist: FC<TodolistProps> = memo(({
   id,
   title,
   date,
@@ -29,36 +24,39 @@ export const Todolist: FC<TodolistProps> = ({
   changeTitleTodolist,
 }) => {
 
- 
+  console.log("Todolist")
 
-  const onClickFilter = (id: string, filter: FilterType) => {
-    changeFilter(id, filter)
-  }
-  const removeTodolistHandler = () => {
-    removeTodolist(id)
-  }
-  const changeTitleTodolistHandler = (title: string) => {
-    changeTitleTodolist(id, title)
-  }
+  const onClickFilter = useCallback(
+    (id: string, filter: FilterType) =>
+      () => changeFilter(id, filter)
+    , [changeFilter])
+  const removeTodolistHandler = useCallback(
+    () => {
+      removeTodolist(id)
+    }, [])
+  const changeTitleTodolistHandler = useCallback(
+    (title: string) => {
+      changeTitleTodolist(id, title)
+    }, [])
 
   return (
     <div>
       <DemoPaper >
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div style={{ padding: "0 20px" }}>
-            <SpanInputItem onClick={changeTitleTodolistHandler} title={title} ></SpanInputItem>
+            <SpanInputItem onClick={changeTitleTodolistHandler} title={title} />
           </div>
           <RemoveButton onClick={removeTodolistHandler} />
         </div>
 
-        
-        <Tasks todolistId = {id} todolistFilter = {filter}/>
+
+        <Tasks todolistId={id} todolistFilter={filter} />
         {
           JSON.stringify(date)
         }
         <div>
           <Button
-            onClick={() => onClickFilter(id, filterValue.all)}
+            onClick={onClickFilter(id, filterValue.all)}
             disabled={filter === filterValue.all}
             color="warning"
             size="small"
@@ -67,7 +65,7 @@ export const Todolist: FC<TodolistProps> = ({
             title={filterValue.all}
           >{filterValue.all}</Button>
           <Button
-            onClick={() => onClickFilter(id, filterValue.active)}
+            onClick={onClickFilter(id, filterValue.active)}
             disabled={filter === filterValue.active}
             color="success"
             size="small"
@@ -75,7 +73,7 @@ export const Todolist: FC<TodolistProps> = ({
             endIcon={<FingerprintIcon />}
           >{filterValue.active}</Button>
           <Button
-            onClick={() => onClickFilter(id, filterValue.completed)}
+            onClick={onClickFilter(id, filterValue.completed)}
             disabled={filter === filterValue.completed}
             color="info"
             size="small"
@@ -86,7 +84,7 @@ export const Todolist: FC<TodolistProps> = ({
       </DemoPaper>
     </div >
   );
-};
+})
 
 
 

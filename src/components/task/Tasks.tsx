@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { FC } from "react";
+import { FC, memo, useCallback, useMemo } from "react";
 import { TaskType } from "../../types/Task";
 import { Task } from "./Task";
 import { useAppDispatch, useAppSelector } from "../../store/store";
@@ -15,14 +15,17 @@ type TasksProps = {
 }
 
 
-export const Tasks: FC<TasksProps> = ({
+
+
+export const Tasks: FC<TasksProps> = memo(({
     todolistFilter,
     todolistId,
 }) => {
 
-
     let tasks = useAppSelector<Array<TaskType>>(state => state.tasks[todolistId]);
     const dispatch = useAppDispatch();
+
+    console.log("Tasks")
 
     switch (todolistFilter) {
         case (filterValue.active): {
@@ -35,30 +38,35 @@ export const Tasks: FC<TasksProps> = ({
         }
         default:
     }
+    const onRemoveTask = useCallback((id: string) => dispatch(removeTaskAC(todolistId, id)), [removeTaskAC]);
+    const onChangeStatus = useCallback((id: string, isDone: boolean) => dispatch(changeStatusAC(todolistId, id, isDone)), [changeStatusAC]);
+    const onChangeTitleTask = useCallback((id: string, title: string) => dispatch(changeTitleTaskAC(todolistId, id, title)), [changeTitleTaskAC]);
+    const onSetTitle = useCallback((title: string) => { dispatch(addTaskAC(todolistId, title)) }, [addTaskAC]);
 
-    const taskList = tasks.map(({
-        id,
-        title,
-        isDone,
+    const taskList = useMemo(
+        () => tasks.map(({
+            id,
+            title,
+            isDone,
+        }: TaskType) => (
+            <Task
+                key={id}
+                id={id}
+                title={title}
+                isDone={isDone}
+                todolistId={id}
+                removeTask={onRemoveTask}
+                changeStatus={onChangeStatus}
+                changeTitleTask={onChangeTitleTask}
+            />
+        )), [tasks, onRemoveTask, onChangeStatus, onChangeTitleTask]
+    )
 
-    }: TaskType) => (
-        <Task
-            key={id}
-            id={id}
-            title={title}
-            isDone={isDone}
 
-            todolistId={id}
-
-            removeTask={() => { dispatch(removeTaskAC(todolistId, id)) }}
-            changeStatus={(isDone: boolean) => { dispatch(changeStatusAC(todolistId, id, isDone)) }}
-            changeTitleTask={(title) => dispatch(changeTitleTaskAC(todolistId, id, title))}
-        />
-    ));
 
     return (
         <>
-            <TitleInput onClick={(title: string) => { dispatch(addTaskAC(todolistId, title)) }} />
+            <TitleInput onClick={onSetTitle} />
             {
                 (taskList.length)
                     ? <UnorderedList>{taskList}</UnorderedList>
@@ -66,7 +74,7 @@ export const Tasks: FC<TasksProps> = ({
             }
         </>
     )
-}
+})
 
 const UnorderedList = styled.ul`
   padding: 0;
