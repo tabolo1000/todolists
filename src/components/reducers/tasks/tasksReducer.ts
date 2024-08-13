@@ -12,16 +12,18 @@ enum ACT {
     REMOVE_TASK = "REMOVE_TASK",
     REMOVE_TODOLIST = "REMOVE_TODOLIST",
 }
+const initialTasks: TasksType = {
+}
 
 export interface ITaskReducer {
     (initialState: TasksType, action: TasksAction): TasksType,
 }
 
-type TasksAction = SetTodolistTaskType | ChangeTitleTaskType |
+export type TasksAction = SetTodolistTaskType | ChangeTitleTaskType |
     ChangeStatusType | RemoveTaskType | AddTaskType | RemoveTodolistType;
 
 
-export const taskReducer: ITaskReducer = (initialState, action) => {
+export const taskReducer: ITaskReducer = (initialState = initialTasks, action) => {
     switch (action.type) {
         case ACT.SET_TODOLIST_TASK: {
             return {

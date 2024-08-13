@@ -24,14 +24,14 @@ export const Task: FC<TaskProps> = ({
 
     /* ----handlers----- */
     const onRemoveTask = () => {
-        removeTask(todolistId, id)
+        removeTask()
     }
-    const onChangeStatus = (taskId: string, isDone: boolean) => {
-        changeStatus(todolistId, taskId, isDone)
+    const onChangeStatus = (isDone: boolean) => {
+        changeStatus(isDone)
     }
 
     const changeTitleTaskHandler = (title: string) => {
-        changeTitleTask(todolistId, id, title)
+        changeTitleTask(title)
     }
     /* checked={isDone} type="checkbox" name="checkbox" onClick={() => onChangeStatus(id, !isDone)}*/
 
@@ -41,7 +41,7 @@ export const Task: FC<TaskProps> = ({
                 color="primary"
 
                 checked={isDone}
-                onChange={() => onChangeStatus(id, !isDone)}
+                onChange={() => onChangeStatus(!isDone)}
                 size="medium"
                 icon={<AddBoxOutlinedIcon color="success" />}
                 checkedIcon={<AddBoxIcon color="primary" />}

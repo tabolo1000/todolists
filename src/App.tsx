@@ -16,6 +16,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { Container, Fab, Grid, Paper } from '@mui/material';
 import { changeFilterTodolistAC, changeTitleTodolistAC, createTodolistAC, ITodolistReducer, removeTodolistAC, todolistsReducer } from './components/reducers/todolists/todolistsReducer';
 import { addTaskAC, changeStatusAC, changeTitleTaskAC, ITaskReducer, removeTaskAC, setTodolistTaskAC, taskReducer } from './components/reducers/tasks/tasksReducer';
+import { useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from './store/store';
 
 
 
@@ -55,45 +57,29 @@ const initialTodolists: Array<TodolistType> = [
 
 
 function App() {
-    //const [todolists, setTodolist] = useState<Array<TodolistType>>(initialTodolists)
-    //const [tasks, setTasks] = useState<TasksType>(initialTasks)
-
-    const [todolists, dispatchTodolist] = useReducer<ITodolistReducer>(todolistsReducer, initialTodolists)
-    const [tasks, dispatchTask] = useReducer<ITaskReducer>(taskReducer ,initialTasks)
+    const todolists = useAppSelector<Array<TodolistType>>(state => state.todolists);
+    const dispatch = useAppDispatch();
     const date: Date = new Date();
 
 
 
     /* todolists method */
     const removeTodolist = (todolistId: string) => {
-        dispatchTodolist(removeTodolistAC(todolistId))
-        //  setTodolist(todolists.filter((el: TodolistType) => (el.id !== todolistId) ))
+        dispatch(removeTodolistAC(todolistId))
     }
     const createTodolist = (title: string) => {
         const id = v1();
-        dispatchTodolist(createTodolistAC(id, title))
-        dispatchTask(setTodolistTaskAC(id))
+        dispatch(createTodolistAC(id, title))
+        dispatch(setTodolistTaskAC(id))
     }
     function changeFilterTodolist(todolistId: string, filter: FilterType) {
-        dispatchTodolist(changeFilterTodolistAC(todolistId, filter));
+        dispatch(changeFilterTodolistAC(todolistId, filter))
     }
     const changeTitleTodolist = (todolistId: string, title: string) => {
-        dispatchTodolist(changeTitleTodolistAC(todolistId, title))
+        dispatch(changeTitleTodolistAC(todolistId, title))
     }
 
-    /* task method */
-    const removeTask = (todolistId: string, taskId: string) => {
-        dispatchTask(removeTaskAC(todolistId, taskId));
-    };
-    const addTask = (todolistId: string, title: string) => {
-        dispatchTask(addTaskAC(todolistId, title));
-    };
-    const changeStatus = (todolistId: string, taskId: string, isDone: boolean) => {
-        dispatchTask(changeStatusAC(todolistId, taskId, isDone));
-    };
-    const changeTitleTask = (todolistId: string, taskId: string, title: string) => {
-        dispatchTask(changeTitleTaskAC(todolistId, taskId, title))
-    };
+
 
 
     const listTodolists = todolists.map(el => {
@@ -105,15 +91,8 @@ function App() {
                     title={el.title}
                     filter={el.filter}
 
-                    tasks={tasks[el.id]}
-
                     removeTodolist={removeTodolist}
                     changeFilter={changeFilterTodolist}
-
-                    addTask={addTask}
-                    removeTask={removeTask}
-                    changeStatus={changeStatus}
-                    changeTitleTask={changeTitleTask}
                     changeTitleTodolist={changeTitleTodolist}
                 />
             </Grid>

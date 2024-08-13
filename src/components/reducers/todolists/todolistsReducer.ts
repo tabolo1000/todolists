@@ -1,14 +1,8 @@
 import { v1 } from "uuid"
-import { TodolistType } from "../../../App"
-import exp from "constants";
+import {TodolistType } from "../../../App"
 import { FilterType } from "../../../types/todolist";
-import {Reducer} from "react";
 
 
-// type TodolistReducerType = Reducer<Array<TodolistType>, TodolistActions>
-export interface ITodolistReducer {
-    (state: Array<TodolistType>, action: TodolistActions): Array<TodolistType>;
-}
 
 
 enum ACT {
@@ -17,19 +11,26 @@ enum ACT {
     CHANGE_FILTER_TODOLIST = 'CHANGE_FILTER_TODOLIST',
     REMOVE_TODOLIST = 'REMOVE_TODOLIST',
 }
+const initialTodolists: Array<TodolistType> = [
+]
 
-type TodolistActions = CreateTodolistType | ChangeTitleTodolistType
+// type TodolistReducerType = Reducer<Array<TodolistType>, TodolistActions>
+export interface ITodolistReducer {
+    (state: Array<TodolistType>, action: TodolistAction): Array<TodolistType>;
+}
+
+export type TodolistAction = CreateTodolistType | ChangeTitleTodolistType
     | ChangeFilterTodolistType | RemoveTodolistType
 
-export const todolistsReducer: ITodolistReducer = (initialState, action) => {
+export const todolistsReducer: ITodolistReducer = (initialState=initialTodolists, action) => {
+   
 
     switch (action.type) {
         case ACT.ADD_TODOLIST: {
-            const id = v1()
             return ([
                 {
-                    id,
-                    title: action.payload.id,
+                    id: action.payload.id,
+                    title: action.payload.title,
                     filter: 'All',
                 },
                 ...initialState

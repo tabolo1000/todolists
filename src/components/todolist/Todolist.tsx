@@ -7,8 +7,12 @@ import styled from "styled-components";
 import { SpanInputItem } from "../spanInputItem/SpanInputItem";
 import { Button, Paper } from "@mui/material";
 import FingerprintIcon from '@mui/icons-material/Fingerprint';
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import { TasksType } from "../../App";
+import { addTaskAC, changeStatusAC, changeTitleTaskAC, removeTaskAC } from "../reducers/tasks/tasksReducer";
+import { Tasks } from "../task/Tasks";
 
-enum filterValue {
+export enum filterValue {
   all = "All",
   active = "Active",
   completed = "Completed",
@@ -17,55 +21,20 @@ enum filterValue {
 export const Todolist: FC<TodolistProps> = ({
   id,
   title,
-  tasks,
   date,
   filter,
-  addTask,
+
   changeFilter,
-  removeTask,
-  changeStatus,
-  changeTitleTask,
   removeTodolist,
   changeTitleTodolist,
 }) => {
-  switch (filter) {
-    case (filterValue.active): {
-      tasks = tasks.filter(el => !el.isDone);
-      break;
-    }
-    case (filterValue.completed): {
-      tasks = tasks.filter(el => el.isDone);
-      break;
-    }
-    default:
-  }
 
-  /* lists for react render */
-  const taskList = tasks.map((task: TaskType) => (
-    <Task
-      key={task.id}
-      id={task.id}
-      title={task.title}
-      isDone={task.isDone}
-
-      todolistId={id}
-
-      removeTask={removeTask}
-      changeStatus={changeStatus}
-      changeTitleTask={changeTitleTask}
-    />
-  ));
-
-
-
-  /* ----handlers----- */
+ 
 
   const onClickFilter = (id: string, filter: FilterType) => {
     changeFilter(id, filter)
   }
-  const onAddTaskInput = (title: string) => {
-    addTask(id, title)
-  }
+  
 
   const removeTodolistHandler = () => {
     removeTodolist(id)
@@ -78,18 +47,14 @@ export const Todolist: FC<TodolistProps> = ({
     <div>
       <DemoPaper >
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <div style={{padding: "0 20px"}}>
+          <div style={{ padding: "0 20px" }}>
             <SpanInputItem onClick={changeTitleTodolistHandler} title={title} ></SpanInputItem>
-          </div>  
+          </div>
           <RemoveButton onClick={removeTodolistHandler} />
         </div>
 
-        <TitleInput onClick={onAddTaskInput} />
-        {
-          (taskList.length)
-            ? <UnorderedList>{taskList}</UnorderedList>
-            : "In this moment, you don't have task!"
-        }
+        
+        <Tasks todolistId = {id} todolistFilter = {filter}/>
         {
           JSON.stringify(date)
         }
@@ -147,6 +112,4 @@ const DemoPaper = styled(Paper)(({ theme }) => ({
   borderRadius: "10px !important",
 }));
 
-const UnorderedList = styled.ul`
-  padding: 0;
-`
+
