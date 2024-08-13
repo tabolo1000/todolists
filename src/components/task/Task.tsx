@@ -1,26 +1,21 @@
-import React, { ChangeEvent, FC, useState, KeyboardEvent } from "react";
-import { TaskProps, TaskType } from "../../types/Task";
+import { FC } from "react";
+import { TaskProps } from "../../types/Task";
 import styled from "styled-components";
 import { Button, Checkbox } from "@mui/material";
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { SpanInputItem } from "../spanInputItem/SpanInputItem";
-import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
 
 
 
 export const Task: FC<TaskProps> = ({
-    id,
     title,
     isDone,
-    todolistId,
     removeTask,
     changeStatus,
     changeTitleTask
 }) => {
-    const [activeInput, setActiveInput] = useState<boolean>(false);
-    const [newTitle, setTitle] = useState<string>('');
 
     /* ----handlers----- */
     const onRemoveTask = () => {
@@ -33,8 +28,7 @@ export const Task: FC<TaskProps> = ({
     const changeTitleTaskHandler = (title: string) => {
         changeTitleTask(title)
     }
-    /* checked={isDone} type="checkbox" name="checkbox" onClick={() => onChangeStatus(id, !isDone)}*/
-
+ 
     return (
         <ListItem>
             <Checkbox

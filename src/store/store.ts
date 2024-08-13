@@ -2,8 +2,7 @@
 import { combineReducers, Dispatch, legacy_createStore } from "redux";
 import { taskReducer, TasksAction } from "../components/reducers/tasks/tasksReducer";
 import { TodolistAction, todolistsReducer } from "../components/reducers/todolists/todolistsReducer";
-import { TasksType, TodolistType } from '../App';
-import { TypedUseSelectorHook, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 
 

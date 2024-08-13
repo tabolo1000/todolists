@@ -34,8 +34,6 @@ export const Todolist: FC<TodolistProps> = ({
   const onClickFilter = (id: string, filter: FilterType) => {
     changeFilter(id, filter)
   }
-  
-
   const removeTodolistHandler = () => {
     removeTodolist(id)
   }

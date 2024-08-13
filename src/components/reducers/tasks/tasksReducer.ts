@@ -5,6 +5,7 @@ import { RemoveTodolistType } from '../todolists/todolistsReducer';
 
 
 enum ACT {
+    ADD_TODOLIST = "ADD_TODOLIST",
     SET_TODOLIST_TASK = "SET_TODOLIST_TASK",
     CHANGE_TITLE_TASK = "CHANGE_TITLE_TASK",
     CHANGE_STATUS = "CHANGE_STATUS",
@@ -25,7 +26,7 @@ export type TasksAction = SetTodolistTaskType | ChangeTitleTaskType |
 
 export const taskReducer: ITaskReducer = (initialState = initialTasks, action) => {
     switch (action.type) {
-        case ACT.SET_TODOLIST_TASK: {
+        case ACT.ADD_TODOLIST: {
             return {
                 ...initialState,
                 [action.payload.id]: []
@@ -84,7 +85,7 @@ type ChangeTitleTaskType = ReturnType<typeof changeTitleTaskAC>
 
 export const setTodolistTaskAC = (id: string) => {
     return {
-        type: ACT.SET_TODOLIST_TASK,
+        type: ACT.ADD_TODOLIST,
         payload: {
             id
         },

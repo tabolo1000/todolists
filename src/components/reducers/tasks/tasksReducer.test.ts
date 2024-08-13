@@ -1,4 +1,3 @@
-import { Todolist } from './../../todolist/Todolist';
 import { v1 } from "uuid"
 import { TasksType, TodolistType } from "../../../App"
 import { createTodolistAC, removeTodolistAC, todolistsReducer } from "../todolists/todolistsReducer";
