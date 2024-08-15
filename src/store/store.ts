@@ -11,7 +11,7 @@ const rootReducer = combineReducers({
     tasks: taskReducer,
 })
 
-type StateType = ReturnType<typeof rootReducer>
+export type StateType = ReturnType<typeof rootReducer>
 
 type RootReducerType = TasksAction | TodolistAction;
 

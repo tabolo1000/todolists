@@ -1,0 +1,15 @@
+#storybook-root {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#storybook-root {
+    background-color: rgba(0, 208, 255, 0.082)
+}
+
+* {
+    color: #c3cbdb;
+}

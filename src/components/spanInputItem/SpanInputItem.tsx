@@ -21,26 +21,26 @@ export const SpanInputItem = memo(({
     /* ----handlers----- */
     const onBlurSetTitleHandler = useCallback(
         () => {
-        setActiveInput(!activeInput)
-        if (newTitle.trim()) {
-            onClick(newTitle);
-            return
-        }
-        onClick(title)
-    }, [onClick, setActiveInput]);
+            setActiveInput(!activeInput)
+            if (newTitle.trim()) {
+                onClick(newTitle);
+                return
+            }
+            onClick(title)
+        }, [onClick, setActiveInput, activeInput, newTitle]);
     const onKeyHandler = useCallback(
         (e: KeyboardEvent<HTMLInputElement | HTMLDivElement>) => {
-        if (e.key === "Enter") {
-            onBlurSetTitleHandler()
-        }
-    }, [onBlurSetTitleHandler]);
+            if (e.key === "Enter") {
+                onBlurSetTitleHandler()
+            }
+        }, [onBlurSetTitleHandler]);
     const onDoubleClick = useCallback(
         (e: MouseEvent<HTMLSpanElement>) => {
-        setActiveInput(!activeInput)
-        setTitle(title)
-    }, [setActiveInput, setTitle]);
+            setActiveInput(!activeInput)
+            setTitle(title)
+        }, [setActiveInput, setTitle, activeInput]);
     const changeHandler = useCallback(
-        (e: ChangeEvent<HTMLTextAreaElement>) => 
+        (e: ChangeEvent<HTMLTextAreaElement>) =>
             setTitle(e.target.value), [setTitle]);
 
     return (

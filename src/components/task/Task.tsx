@@ -71,6 +71,7 @@ export const RemoveButton = ({ onClick }: ButtonRemoveType) => {
 
 const ListItem = styled.li`
     display: flex;
+    
     justify-content: space-between;
     div > span{
         padding: 0 10px

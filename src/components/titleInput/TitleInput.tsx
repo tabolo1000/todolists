@@ -16,7 +16,7 @@ export const TitleInput = memo(({ onClick }: TitleInputProps) => {
     const handleTypingTitle = useCallback((e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         if (error) setError(null); 
         setTitle(e.target.value);
-    },[setTitle, setError])
+    },[error, title, setError, setTitle])
 
 
     const onClickHandler = useCallback(() => {
@@ -28,7 +28,7 @@ export const TitleInput = memo(({ onClick }: TitleInputProps) => {
         
         setTitle("");
         onClick(correctTitle); 
-    }, [setError, onClick])
+    }, [title, error,setError, onClick])
 
     const onKeyHandler = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
         if (e.key === "Enter" && !error) {
@@ -39,6 +39,7 @@ export const TitleInput = memo(({ onClick }: TitleInputProps) => {
     return (
         <div>
             <TextField
+                
                 label="Type title!"
                 size="small"
                 error={!!error}
@@ -50,6 +51,7 @@ export const TitleInput = memo(({ onClick }: TitleInputProps) => {
                 helperText={error || ''}
             />
             <Button
+                aria-label="button send new title"
                 size="large"
                 variant="outlined"
                 disabled={!title.trim() || !!error}
