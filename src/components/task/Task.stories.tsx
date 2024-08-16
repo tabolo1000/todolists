@@ -21,11 +21,25 @@ const meta: Meta<typeof Task> = {
         },
         changeTitleTask:{
             description: 'Title changed inside Task'
+        },
+        id: {
+            description: "Id of Task",
+            control: "select",
+            options: ["todolistId1","todolistId2"]
+        },
+        title: {
+            description: "Name of Task",
+            control: "text",
+        },
+        isDone: {
+            description: "Task is done?",
+            control: "boolean",
         }
+
     },
     args: {
         ...ActionsData,
-        id: '12wsdewfijdei',
+        id: 'todolistId1',
         title: 'JS',
         isDone: false,
     }

@@ -1,50 +1,18 @@
 import { Container, Grid, Paper, styled } from "@mui/material";
-import { TodolistType } from "../../App";
-import { useAppDispatch, useAppSelector } from "../../store/store";
-import { Todolist } from "./Todolist";
-import { changeFilterTodolistAC, changeTitleTodolistAC, createTodolistAC, removeTodolistAC } from "../reducers/todolists/todolistsReducer";
 import { TitleInput } from "../titleInput/TitleInput";
-import { v1 } from "uuid";
-import { FilterType } from "../../types/todolist";
-import { memo, useCallback, useMemo } from "react";
+import { memo } from "react";
+import { useTodolists } from "./useTodolists";
 
 
 
 
 export const Todolists = memo(() => {
 
-    const todolists = useAppSelector<Array<TodolistType>>(state => state.todolists);
-    const dispatch = useAppDispatch();
+    const { onClickSetTitle, listTodolists } = useTodolists()
 
-    console.log("Todolists")
 
-    // hendlers for todolist
-    const onClickSetTitle = useCallback((title: string) => { dispatch(createTodolistAC(v1(), title)) }, [createTodolistAC])
-    const onRemoveTodolist = useCallback((id: string) => dispatch(removeTodolistAC(id)), [removeTodolistAC]);
-    const onChangeFilter = useCallback((id: string, filter: FilterType) => dispatch(changeFilterTodolistAC(id, filter)), [changeFilterTodolistAC]);
-    const onChangeTitleTodolist = useCallback((id: string, title: string) => dispatch(changeTitleTodolistAC(id, title)), [changeTitleTodolistAC]);
-
-    const listTodolists = useMemo(
-        () => todolists.map(({
-            id,
-            title,
-            filter,
-        }: TodolistType) => (
-            <Grid key={id} item xs={12} sm={7} md={5} lg={4} >
-                <Todolist
-                    id={id}
-                    title={title}
-                    filter={filter}
-
-                    removeTodolist={onRemoveTodolist}
-                    changeFilter={onChangeFilter}
-                    changeTitleTodolist={onChangeTitleTodolist}
-                />
-            </Grid>
-        )), [todolists, onRemoveTodolist, onChangeFilter, onChangeTitleTodolist]
-    )
     return (
-        <ContainerApp fixed  >
+        <ContainerApp fixed>
             <Grid
                 p={"5px 0 20px"}
                 container>
@@ -73,7 +41,7 @@ export const Todolists = memo(() => {
 
 const TitleInputArea = styled(Paper)({
     backgroundColor: "#bdd3d59d !important",
-    width: 280,
+    width: 300,
     padding: 10,
     margin: "70px 0 0",
 })

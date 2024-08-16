@@ -25,10 +25,6 @@ export type TodolistType = {
 
 
 function App() {
-    console.log("App")
-    const date: Date = new Date();
-    
-
     return (
         <MainApp>
             <AppBarStyled
@@ -62,6 +58,7 @@ const AppBarStyled = styled(AppBar)({
 
 
 const MainApp = styled.div`
+    min-width: 100vw;
     background-image: url(${fone});
     background-attachment: fixed;
     background-repeat: no-repeat;
