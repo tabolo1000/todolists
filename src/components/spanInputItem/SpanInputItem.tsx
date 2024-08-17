@@ -1,17 +1,18 @@
 import { TextField, Typography, TypographyProps } from "@mui/material";
 import { useState, KeyboardEvent, MouseEvent, memo, useCallback, ChangeEvent } from "react";
 import styled from "styled-components";
+import { TaskStatus } from "../reducers/tasks/tasksReducer";
 
 type InputProps = {
     onClick: (title: string) => void,
     title: string
-    isDone?: boolean
+    status?: boolean
 }
 
 export const SpanInputItem = memo(({
     onClick,
     title,
-    isDone,
+    status,
 
 }: InputProps) => {
     console.log("span active")
@@ -74,13 +75,13 @@ const MyTextField = styled(TextField)({
 
 
 interface CustomTypographyProps extends TypographyProps {
-    isDone?: boolean;
+    status?: TaskStatus;
 }
 
 
-const CustomTypography = styled(Typography)<CustomTypographyProps>(({ isDone }) => ({
+const CustomTypography = styled(Typography)<CustomTypographyProps>(({ status }) => ({
     textShadow: "0px 1px 1px rgba(0, 0, 0, 0.5)",
-    color: `${(isDone) ? "blue" : "green"}`, // Использует цвет из пропсов, если он есть, иначе "green"
+    color: `${(status) ? "blue" : "green"}`, // Использует цвет из пропсов, если он есть, иначе "green"
     fontWeight: 400,
     fontSize: "15px"
 }));

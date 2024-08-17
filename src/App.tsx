@@ -1,6 +1,4 @@
 import './App.css';
-import { TaskType } from './types/Task';
-import { FilterType } from './types/todolist';
 import styled from 'styled-components';
 import fone from './assets/image/image.webp'
 import AppBar from '@mui/material/AppBar';
@@ -13,15 +11,7 @@ import { Todolists } from './components/todolist/Todolists';
 
 
 
-export type TasksType = {
-    [x: string]: Array<TaskType>
-}
 
-export type TodolistType = {
-    id: string;
-    title: string;
-    filter: FilterType
-}
 
 
 function App() {

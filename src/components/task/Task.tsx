@@ -6,13 +6,14 @@ import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import { SpanInputItem } from "../spanInputItem/SpanInputItem";
 import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
+import { TaskStatus } from "../reducers/tasks/tasksReducer";
 
 
 
 export const Task: FC<TaskProps> = memo(({
     id,
     title,
-    isDone,
+    status,
     removeTask,
     changeStatus,
     changeTitleTask
@@ -25,8 +26,11 @@ export const Task: FC<TaskProps> = memo(({
         [removeTask]
     )
     const onChangeStatus = useCallback(
-        (isDone: boolean) =>
-            () => changeStatus(id, isDone),
+        (status: TaskStatus) =>
+            () => {
+                status = status? TaskStatus.New : TaskStatus.Completed
+                changeStatus(id, status)
+            },
         [changeStatus]
     )
     const changeTitleTaskHandler = useCallback(
@@ -38,13 +42,13 @@ export const Task: FC<TaskProps> = memo(({
         <ListItem>
             <Checkbox
                 color="primary"
-                checked={isDone}
-                onChange={onChangeStatus(!isDone)}
+                checked={!!status}
+                onChange={onChangeStatus(status)}
                 size="medium"
                 icon={<AddBoxOutlinedIcon color="success" />}
                 checkedIcon={<AddBoxIcon color="primary" />}
             />
-            <SpanInputItem isDone={isDone} onClick={changeTitleTaskHandler} title={title}></SpanInputItem>
+            <SpanInputItem status={status} onClick={changeTitleTaskHandler} title={title}></SpanInputItem>
             <RemoveButton onClick={onRemoveTask} />
         </ListItem>
     )

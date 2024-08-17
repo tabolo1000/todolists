@@ -6280,7 +6280,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.6.1":
+"axios@npm:^1.6.1, axios@npm:^1.7.4":
   version: 1.7.4
   resolution: "axios@npm:1.7.4"
   dependencies:
@@ -17870,6 +17870,7 @@ __metadata:
     "@types/react-redux": "npm:^7.1.33"
     "@types/styled-components": "npm:^5.1.34"
     "@types/uuid": "npm:^10.0.0"
+    axios: "npm:^1.7.4"
     eslint-plugin-storybook: "npm:^0.8.0"
     jest: "npm:^29.7.0"
     jest-environment-jsdom: "npm:^29.7.0"

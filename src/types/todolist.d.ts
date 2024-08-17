@@ -2,6 +2,9 @@ import { TaskType } from "./Task";
 
 export type FilterType = "All" | "Active" | "Completed";
 
+export type TodolistDomainType = TodolistType & {
+    filter: FilterType
+}
 
 export type TodolistProps = {
     id: string;

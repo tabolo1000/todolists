@@ -1,24 +1,36 @@
 import { v1 } from "uuid";
-import { TodolistType } from "../../../App";
 import { changeFilterTodolistAC, changeTitleTodolistAC, createTodolistAC, removeTodolistAC, todolistsReducer } from "./todolistsReducer";
+import { TodolistDomainType } from "../../../types/todolist";
 
 
-let initialTodolists: Array<TodolistType>;
+let initialTodolists: Array<TodolistDomainType>;
 const todolistId: string = v1(),
     todolistId2: string = v1();
 beforeEach(() => {
 
 
     initialTodolists = [
-        { id: todolistId, title: "Technologes", filter: "All" },
-        { id: todolistId2, title: "UI", filter: "All" }
+        {
+            id: todolistId,
+            title: "Technologes",
+            filter: "All",
+            addedDate: "",
+            order: 0,
+        },
+        {
+            id: todolistId2,
+            title: "UI",
+            filter: "All",
+            addedDate: "",
+            order: 0,
+        }
     ];
 });
 
 
 test("Create todolist", () => {
     const action = createTodolistAC(todolistId, "React")
-    const state: Array<TodolistType> = todolistsReducer(initialTodolists, action)
+    const state: Array<TodolistDomainType> = todolistsReducer(initialTodolists, action)
 
     expect(state).toHaveLength(3);
     expect(state[1]).not.toBeUndefined();
@@ -45,7 +57,7 @@ test("change filter todolist", () => {
 
 test("remove todolist", () => {
     const action = removeTodolistAC(todolistId);
-    
+
     const state = todolistsReducer(initialTodolists, action);
 
     expect(state).toHaveLength(1);

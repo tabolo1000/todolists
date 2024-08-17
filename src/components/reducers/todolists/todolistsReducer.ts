@@ -1,5 +1,4 @@
-import {TodolistType } from "../../../App"
-import { FilterType } from "../../../types/todolist";
+import { FilterType, TodolistDomainType } from "../../../types/todolist";
 
 
 
@@ -10,19 +9,19 @@ enum ACT {
     CHANGE_FILTER_TODOLIST = 'CHANGE_FILTER_TODOLIST',
     REMOVE_TODOLIST = 'REMOVE_TODOLIST',
 }
-const initialTodolists: Array<TodolistType> = [
+const initialTodolists: Array<TodolistDomainType> = [
 ]
 
 // type TodolistReducerType = Reducer<Array<TodolistType>, TodolistActions>
 export interface ITodolistReducer {
-    (state: Array<TodolistType>, action: TodolistAction): Array<TodolistType>;
+    (state: Array<TodolistDomainType>, action: TodolistAction): Array<TodolistDomainType>;
 }
 
 export type TodolistAction = CreateTodolistType | ChangeTitleTodolistType
     | ChangeFilterTodolistType | RemoveTodolistType
 
-export const todolistsReducer: ITodolistReducer = (initialState=initialTodolists, action) => {
-   
+export const todolistsReducer: ITodolistReducer = (initialState = initialTodolists, action) => {
+
 
     switch (action.type) {
         case ACT.ADD_TODOLIST: {
@@ -31,13 +30,15 @@ export const todolistsReducer: ITodolistReducer = (initialState=initialTodolists
                     id: action.payload.id,
                     title: action.payload.title,
                     filter: 'All',
+                    addedDate: "",
+                    order: 0,
                 },
                 ...initialState
             ])
         };
         case ACT.CHANGE_TITLE_TODOLIST: {
             return (
-                initialState.map((el: TodolistType) =>
+                initialState.map((el: TodolistDomainType) =>
                     (el.id === action.payload.id)
                         ? { ...el, title: action.payload.title }
                         : el)
@@ -45,7 +46,7 @@ export const todolistsReducer: ITodolistReducer = (initialState=initialTodolists
         };
         case ACT.CHANGE_FILTER_TODOLIST: {
             return (
-                initialState.map((el: TodolistType) => {
+                initialState.map((el: TodolistDomainType) => {
                     return (el.id === action.payload.id)
                         ? { ...el, filter: action.payload.filter }
                         : el
@@ -54,7 +55,7 @@ export const todolistsReducer: ITodolistReducer = (initialState=initialTodolists
         };
         case ACT.REMOVE_TODOLIST: {
             return (
-                initialState.filter((el: TodolistType) => (el.id !== action.payload.id))
+                initialState.filter((el: TodolistDomainType) => (el.id !== action.payload.id))
             )
         };
         default:
@@ -90,7 +91,7 @@ export const changeTitleTodolistAC = (id: string, title: string) => {
     } as const;
 };
 
-export const changeFilterTodolistAC = (id: string, filter: FilterType) =>{
+export const changeFilterTodolistAC = (id: string, filter: FilterType) => {
     return {
         type: ACT.CHANGE_FILTER_TODOLIST,
         payload: {

@@ -1,10 +1,9 @@
 import { Grid } from "@mui/material";
-import { TodolistType } from "../../App";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { Todolist } from "./Todolist";
 import { changeFilterTodolistAC, changeTitleTodolistAC, createTodolistAC, removeTodolistAC } from "../reducers/todolists/todolistsReducer";
 import { v1 } from "uuid";
-import { FilterType } from "../../types/todolist";
+import { FilterType, TodolistDomainType } from "../../types/todolist";
 import { useCallback, useMemo } from "react";
 
 
@@ -13,7 +12,7 @@ import { useCallback, useMemo } from "react";
 
 export const useTodolists = () => {
 
-    const todolists = useAppSelector<Array<TodolistType>>(state => state.todolists);
+    const todolists = useAppSelector<Array<TodolistDomainType>>(state => state.todolists);
     const dispatch = useAppDispatch();
 
     console.log("Todolists")
@@ -29,7 +28,7 @@ export const useTodolists = () => {
             id,
             title,
             filter,
-        }: TodolistType) => (
+        }: TodolistDomainType) => (
             <Grid key={id} item xs={12} sm={7} md={5} lg={4} >
                 <Todolist
                     id={id}

@@ -1,7 +1,6 @@
-import { TasksType } from "../../../App";
-import { TaskType } from '../../../types/Task';
 import { v1 } from 'uuid';
 import { RemoveTodolistType } from '../todolists/todolistsReducer';
+import { TaskDomainType, TasksDomainType } from '../../../types/Task';
 
 
 enum ACT {
@@ -13,11 +12,28 @@ enum ACT {
     REMOVE_TASK = "REMOVE_TASK",
     REMOVE_TODOLIST = "REMOVE_TODOLIST",
 }
-const initialTasks: TasksType = {
+const initialTasks: TasksDomainType = {
 }
 
+
+export enum TaskStatus {
+    New = 0,
+    InProgress = 1,
+    Completed = 2,
+    Draft = 3,
+}
+
+export enum TaskPriorities {
+    Low = 0,
+    Middle = 1,
+    Hi = 2,
+    Urgently = 3,
+    Later = 4
+}
+
+
 export interface ITaskReducer {
-    (initialState: TasksType, action: TasksAction): TasksType,
+    (initialState: TasksDomainType, action: TasksAction): TasksDomainType,
 }
 
 export type TasksAction = SetTodolistTaskType | ChangeTitleTaskType |
@@ -35,7 +51,7 @@ export const taskReducer: ITaskReducer = (initialState = initialTasks, action) =
         case (ACT.CHANGE_TITLE_TASK): {
             return {
                 ...initialState,
-                [action.payload.todolistId]: initialState[action.payload.todolistId].map((el: TaskType) => {
+                [action.payload.todolistId]: initialState[action.payload.todolistId].map((el: TaskDomainType) => {
                     return (el.id === action.payload.taskId) ? { ...el, title: action.payload.title } : el
                 })
             }
@@ -43,9 +59,9 @@ export const taskReducer: ITaskReducer = (initialState = initialTasks, action) =
         case ACT.CHANGE_STATUS: {
             return {
                 ...initialState,
-                [action.payload.todolistId]: initialState[action.payload.todolistId].map((el: TaskType) => {
+                [action.payload.todolistId]: initialState[action.payload.todolistId].map((el: TaskDomainType) => {
                     return (
-                        (el.id === action.payload.taskId) ? { ...el, isDone: action.payload.status } : el
+                        (el.id === action.payload.taskId) ? { ...el, status: action.payload.status } : el
                     )
                 })
             }
@@ -55,7 +71,19 @@ export const taskReducer: ITaskReducer = (initialState = initialTasks, action) =
                 ...initialState,
                 [action.payload.todolistId]: [
                     ...initialState[action.payload.todolistId],
-                    { id: v1(), title: action.payload.title, isDone: false }
+                    {
+                        id: v1(),
+                        title: action.payload.title,
+                        status: TaskStatus.New,
+                        todoListId: action.payload.todolistId,
+                        description: "",
+                        completed: false,
+                        priority: TaskPriorities.Low,
+                        startDate: "",
+                        deadline: "",
+                        order: 1,
+                        addedDate: ""
+                    }
                 ]
             }
         }
@@ -66,11 +94,10 @@ export const taskReducer: ITaskReducer = (initialState = initialTasks, action) =
             }
         };
         case 'REMOVE_TODOLIST': {
-            const s = {...initialState};
+            const s = { ...initialState };
             delete s[action.payload.id]
-            return s 
+            return s
         }
-
         default:
             return initialState;
     }
@@ -103,7 +130,7 @@ export const changeTitleTaskAC = (todolistId: string, taskId: string, title: str
 
     } as const
 }
-export const changeStatusAC = (todolistId: string, taskId: string, status: boolean) => {
+export const changeStatusAC = (todolistId: string, taskId: string, status: TaskStatus) => {
     return {
         type: ACT.CHANGE_STATUS,
         payload: {
