@@ -1,6 +1,9 @@
+import { SetTodolistType } from './../todolists/todolistsReducer';
 import { v1 } from 'uuid';
 import { RemoveTodolistType } from '../todolists/todolistsReducer';
 import { TaskDomainType, TasksDomainType } from '../../../types/Task';
+import { Dispatch } from 'redux';
+import { taskAPI } from '../../../api/taskAPI/task-api';
 
 
 enum ACT {
@@ -11,9 +14,10 @@ enum ACT {
     ADD_TASK = "ADD_TASK",
     REMOVE_TASK = "REMOVE_TASK",
     REMOVE_TODOLIST = "REMOVE_TODOLIST",
+    SET_TASKS = "SET_TASKS",
+    SET_TODOLISTS = "SET_TODOLISTS"
 }
-const initialTasks: TasksDomainType = {
-}
+const initialTasks: TasksDomainType = {}
 
 
 export enum TaskStatus {
@@ -37,12 +41,14 @@ export interface ITaskReducer {
 }
 
 export type TasksAction = SetTodolistTaskType | ChangeTitleTaskType |
-    ChangeStatusType | RemoveTaskType | AddTaskType | RemoveTodolistType;
+    ChangeStatusType | RemoveTaskType | AddTaskType | RemoveTodolistType
+    | SetTaskType | SetTodolistType;
 
 
 export const taskReducer: ITaskReducer = (initialState = initialTasks, action) => {
     switch (action.type) {
         case ACT.ADD_TODOLIST: {
+            debugger
             return {
                 ...initialState,
                 [action.payload.id]: []
@@ -98,6 +104,21 @@ export const taskReducer: ITaskReducer = (initialState = initialTasks, action) =
             delete s[action.payload.id]
             return s
         }
+        case ACT.SET_TASKS: {
+            return {
+                ...initialState,
+                [action.payload.todoListId]: action.payload.tasks
+            }
+        }
+        case "SET_TODOLISTS": {
+            return {
+                ...initialState,
+                ...action.payload.todolists.reduce((ac, el) => ({
+                    ...ac,
+                    [el.id]: []
+                }), {})
+            }
+        }
         default:
             return initialState;
     }
@@ -109,6 +130,7 @@ type AddTaskType = ReturnType<typeof addTaskAC>;
 type RemoveTaskType = ReturnType<typeof removeTaskAC>;
 type ChangeStatusType = ReturnType<typeof changeStatusAC>;
 type ChangeTitleTaskType = ReturnType<typeof changeTitleTaskAC>
+type SetTaskType = ReturnType<typeof setTaskAC>
 
 export const setTodolistTaskAC = (id: string) => {
     return {
@@ -162,4 +184,24 @@ export const addTaskAC = (todolistId: string, title: string) => {
     } as const
 }
 
-console.log("addTaskAC".toLocaleUpperCase())
+export const setTaskAC = (todoListId: string, tasks: Array<TaskDomainType>) => {
+    return {
+        type: ACT.SET_TASKS,
+        payload: {
+            todoListId,
+            tasks
+        }
+    } as const
+}
+
+
+export const setTaskTC = (todoListId: string) => {
+    return (dispatch: Dispatch) => {
+        taskAPI.getTasks(todoListId)
+            .then(el => {
+                dispatch(setTaskAC(todoListId, el.data.items))
+            })
+    }
+}
+
+//console.log("addTaskAC".toLocaleUpperCase())

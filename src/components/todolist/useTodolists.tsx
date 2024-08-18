@@ -1,10 +1,10 @@
 import { Grid } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { Todolist } from "./Todolist";
-import { changeFilterTodolistAC, changeTitleTodolistAC, createTodolistAC, removeTodolistAC } from "../reducers/todolists/todolistsReducer";
+import { changeFilterTodolistAC, changeTitleTodolistAC, createTodolistAC, removeTodolistAC, SetTodolistTC } from "../reducers/todolists/todolistsReducer";
 import { v1 } from "uuid";
 import { FilterType, TodolistDomainType } from "../../types/todolist";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 
 
 
@@ -15,6 +15,10 @@ export const useTodolists = () => {
     const todolists = useAppSelector<Array<TodolistDomainType>>(state => state.todolists);
     const dispatch = useAppDispatch();
 
+    useEffect(()=>{
+        dispatch(SetTodolistTC())
+    }, [])
+    
     console.log("Todolists")
 
     // hendlers for todolist
@@ -22,7 +26,6 @@ export const useTodolists = () => {
     const onRemoveTodolist = useCallback((id: string) => dispatch(removeTodolistAC(id)), [dispatch]);
     const onChangeFilter = useCallback((id: string, filter: FilterType) => dispatch(changeFilterTodolistAC(id, filter)), [dispatch]);
     const onChangeTitleTodolist = useCallback((id: string, title: string) => dispatch(changeTitleTodolistAC(id, title)), [dispatch]);
-
     const listTodolists = useMemo(
         () => todolists.map(({
             id,

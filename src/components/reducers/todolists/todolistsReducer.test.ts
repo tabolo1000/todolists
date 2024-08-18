@@ -1,5 +1,5 @@
 import { v1 } from "uuid";
-import { changeFilterTodolistAC, changeTitleTodolistAC, createTodolistAC, removeTodolistAC, todolistsReducer } from "./todolistsReducer";
+import { changeFilterTodolistAC, changeTitleTodolistAC, createTodolistAC, removeTodolistAC, setTodolistAC, todolistsReducer } from "./todolistsReducer";
 import { TodolistDomainType } from "../../../types/todolist";
 
 
@@ -63,4 +63,13 @@ test("remove todolist", () => {
     expect(state).toHaveLength(1);
     expect(state[0].id).toBe(todolistId2);
     expect(state.every(el => el.id !== todolistId)).toBeTruthy();
+})
+
+test("Todolist must be added", () => {
+    const action = setTodolistAC(initialTodolists);
+
+    const state = todolistsReducer(initialTodolists, action);
+    
+    expect(state).toHaveLength(2);
+    expect(state).toContain(initialTodolists[0])
 })

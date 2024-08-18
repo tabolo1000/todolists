@@ -3,6 +3,7 @@ import { } from './todolist-api';
 
 import axios from "axios"
 import { ItemType, ResponseDataType } from './todolist_api';
+import { TodolistType } from './Todolist_API_inteface';
 
 
 
@@ -20,7 +21,7 @@ const instance = axios.create({
 
 export const todolistAPI = {
     getTodolists() {
-        return instance.get<ResponseDataType>("/todo-lists", setting)
+        return instance.get<Array<TodolistType>>("/todo-lists", setting)
     },
     deleteTodolist(todolistId: string) {
         return instance.delete<ResponseDataType>(`/todo-lists/${todolistId}`)
@@ -28,7 +29,6 @@ export const todolistAPI = {
     },
     createTodolist(title: string) {
         return instance.post<ResponseDataType<ItemType>>("/todo-lists", { title })
-
     },
     updateTodolist(todolistId: string, title: string) {
         return instance.put<ResponseDataType>(`/todo-lists/${todolistId}`, { title })

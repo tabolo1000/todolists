@@ -1,6 +1,6 @@
 import { v1 } from "uuid"
 import { createTodolistAC, removeTodolistAC, todolistsReducer } from "../todolists/todolistsReducer";
-import { addTaskAC, changeStatusAC, changeTitleTaskAC, removeTaskAC, setTodolistTaskAC, TaskPriorities, taskReducer, TaskStatus } from "./tasksReducer";
+import { addTaskAC, changeStatusAC, changeTitleTaskAC, removeTaskAC, setTaskAC, setTodolistTaskAC, TaskPriorities, taskReducer, TaskStatus } from "./tasksReducer";
 import { TasksDomainType } from "../../../types/Task";
 import { TodolistDomainType } from "../../../types/todolist";
 
@@ -208,6 +208,13 @@ test("delete todolist task", () => {
 
     expect(state[todoListId]).not.toBeDefined();
     expect(state[todoListId2]).toBeDefined();
+})
+test("Must be add task for todolist", ()=> {
+    const action = setTaskAC(todoListId, initialTasks[todoListId]);
+
+    const state = taskReducer(initialTasks, action);
+
+    expect(state[todoListId]).toBeDefined()
 })
 
 

@@ -1,7 +1,7 @@
-import { ReactElement, useCallback, useMemo } from "react";
+import { ReactElement, useCallback, useEffect, useMemo } from "react";
 import { Task } from "./Task";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { addTaskAC, changeStatusAC, changeTitleTaskAC, removeTaskAC, TaskStatus } from "../reducers/tasks/tasksReducer";
+import { addTaskAC, changeStatusAC, changeTitleTaskAC, removeTaskAC, setTaskTC, TaskStatus } from "../reducers/tasks/tasksReducer";
 import { filterValue } from "../todolist/Todolist";
 import { FilterType } from "../../types/todolist";
 import { TaskDomainType } from "../../types/Task";
@@ -24,6 +24,10 @@ type onSetTitleType = (id: string) => void;
 export const useTasks: useTasksType = (todolistFilter, todolistId) => {
     let tasks = useAppSelector<Array<TaskDomainType>>(state => state.tasks[todolistId]);
     const dispatch = useAppDispatch();
+    
+    useEffect(() => {
+        dispatch(setTaskTC(todolistId))
+    }, [])
 
     console.log("Tasks")
 
