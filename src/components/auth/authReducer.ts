@@ -27,7 +27,6 @@ export const authReducer = (state: InitialState = initialState, action: UnionAct
         case ACT.LOGIN_AUTH: return ({
             ...state,
             login: action.payload,
-            isAuth: true,
         })
         case ACT.LOGOUT_AUTH: return ({
             ...state,
@@ -78,7 +77,11 @@ export const isAuthTC = () => (dispatch: Dispatch<UnionAction>) => {
 export const loginAuthTC = (login: Login) => (dispatch: Dispatch<UnionAction>) => {
     authAPI.loginAuth(login)
         .then((res) => {
-            dispatch(loginAuth(res.data.data))
+            if (res.data.messages.length === 0) {
+                dispatch(loginAuth(res.data.data))
+                dispatch(isAuth(true))
+            }
+            
         })
         .catch(() => {
             alert("loginAuthTC")

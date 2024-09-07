@@ -5,13 +5,18 @@ import { ErrorPage } from "../components/error/Error";
 
 
 export const router = createBrowserRouter([
-   {
-    path: "/",
-    element: <App/>,
-    errorElement: <ErrorPage/>,
-   },
-   {
-    path: "/login",
-    element: <Auth/>
-   }
-  ]);
+    {
+        path: "/",
+        element: <App />,
+        errorElement: <ErrorPage />,
+    },
+    {
+        path: "/login",
+        element: <Auth />
+    },
+
+],
+    {
+        basename: "/todolists"
+    }
+);

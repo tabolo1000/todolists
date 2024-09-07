@@ -17,8 +17,8 @@ export const Auth = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      email: "tabola1000@gmail.com",
+      password: '2zm_G5HffNWc2gm',
       rememberMe: false,
     },
     onSubmit: values => {
@@ -51,7 +51,6 @@ export const Auth = () => {
             label="Password"
             type="password"
             variant="standard"
-            onChange={formik.handleChange}
             value={formik.values.password}
             required
             sx={{ color: "red" }}
