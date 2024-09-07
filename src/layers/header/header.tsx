@@ -1,23 +1,26 @@
-import './App.css';
 import styled from 'styled-components';
-import fone from './assets/image/image.webp'
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Todolists } from './components/todolist/Todolists';
+import { useCallback } from 'react';
+import { useAppDispatch } from '../../store/store';
+import { logoutAuthTC } from '../../components/auth/authReducer';
 
 
 
 
 
-
-function App() {
+export const Header = () => {
+    const dispatch = useAppDispatch()
+    const logoutHandler = useCallback(()=>{
+        dispatch(logoutAuthTC())
+    },[])
     return (
-        <MainApp>
-            <AppBarStyled
+        <>
+            <HeaderMain
                 position="fixed" >
                 <Toolbar>
                     <IconButton
@@ -32,35 +35,23 @@ function App() {
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         News
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    <Button
+                        onClick={logoutHandler}
+                        color="inherit">
+                        Logout
+                    </Button>
                 </Toolbar>
-            </AppBarStyled>
-            <Todolists />
-        </MainApp>
+            </HeaderMain>
+        </>
     )
 }
 
-const AppBarStyled = styled(AppBar)({
+//-----------------Styled_App---------------------------------------
+
+const HeaderMain = styled(AppBar)({
     backgroundColor: "#bdd3d59d !important",
     borderRadius: "0 0 10px 10px"
 })
-
-
-
-const MainApp = styled.div`
-    min-width: 100vw;
-    background-image: url(${fone});
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover ;
-    object-fit: cover;
-    min-height: 100vh;
-`
-
-
-export default App;
-
 
 
 

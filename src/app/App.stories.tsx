@@ -1,6 +1,6 @@
 import type { Meta } from '@storybook/react';
-import App from "./App";
-import { ReduxStoreProviderDecorator } from './stories/ReduxStoreProviderDecorator';
+import { App } from "./App";
+import { ReduxStoreProviderDecorator } from '../stories/ReduxStoreProviderDecorator';
 
 const meta: Meta<typeof App> = {
     title: 'TODOLISTS/App',
@@ -9,6 +9,6 @@ const meta: Meta<typeof App> = {
     decorators: [ReduxStoreProviderDecorator]
 
 };
-    export default meta;
+export default meta;
 
-    export const AppWithReduxStory = {}
+export const AppWithReduxStory = {}
