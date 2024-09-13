@@ -23,7 +23,7 @@ export const Todolist: FC<TodolistProps> = memo(({
   removeTodolist,
   changeTitleTodolist,
 }) => {
-
+  
   console.log("Todolist")
 
   const onClickFilter = useCallback(

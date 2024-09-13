@@ -19,7 +19,6 @@ import { Header } from '../layers/header/header';
 
 export const App = () => {
     const { isAuth } = useApp();
-    debugger
     return (
         <MainApp>
             {

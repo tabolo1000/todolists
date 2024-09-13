@@ -1,6 +1,6 @@
-import { authReducer, isAuth, loginAuth } from "./authReducer";
+import { authReducer} from "./authReducer";
 
-let initialState: InitialState;
+let initialState: any;
 
 beforeEach(() => {
     initialState = {
@@ -16,8 +16,8 @@ beforeEach(() => {
 
 describe("test auth reducer", () => {
     it("should change auth status", () => {
-        const action = isAuth(true);
-        const newState = authReducer(initialState, action);
+        const action = authReducer.actions.isAuth({ isAuth: true });
+        const newState = authReducer.reducer(initialState, action);
 
         expect(newState.isAuth).toBe(true);
         expect(newState.isAuth).not.toBeUndefined();
@@ -26,8 +26,8 @@ describe("test auth reducer", () => {
     });
 
     it("should be logout", () => {
-        const action = isAuth(false);
-        const newState = authReducer(initialState, action);
+        const action = authReducer.actions.logoutAuth({})
+        const newState = authReducer.reducer(initialState, action);
 
         expect(newState.isAuth).toBe(false);
         expect(newState.isAuth).not.toBeUndefined();
@@ -40,8 +40,8 @@ describe("test auth reducer", () => {
             userId: 100,
             token: "9318d787-4529-4959-9a34-fccb35be77b1"
         }
-        const action = loginAuth(dataAction);
-        const newState = authReducer(initialState, action);
+        const action = authReducer.actions.loginAuth({login: dataAction});
+        const newState = authReducer.reducer(initialState, action);
 
         expect(newState.login.userId).toBe(100);
         expect(newState.login.token).toBe("9318d787-4529-4959-9a34-fccb35be77b1");
@@ -60,5 +60,5 @@ type InitialState = {
     login: {
         userId: number;
         token: string;
-    };
+    } | null;
 }

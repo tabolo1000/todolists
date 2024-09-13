@@ -1,7 +1,7 @@
 import { ReactElement, useCallback, useEffect, useMemo } from "react";
 import { Task } from "./Task";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { addTaskAC, changeStatusAC, changeTitleTaskAC, removeTaskAC, setTaskTC, TaskStatus } from "../reducers/tasks/tasksReducer";
+import {  setTaskTC, taskReducer, TaskStatus } from "../reducers/tasks/tasksReducer";
 import { filterValue } from "../todolist/Todolist";
 import { FilterType } from "../../types/todolist";
 import { TaskDomainType } from "../../types/Task";
@@ -24,7 +24,7 @@ type onSetTitleType = (id: string) => void;
 export const useTasks: useTasksType = (todolistFilter, todolistId) => {
     let tasks = useAppSelector<Array<TaskDomainType>>(state => state.tasks[todolistId]);
     const dispatch = useAppDispatch();
-    
+    debugger
     useEffect(() => {
         dispatch(setTaskTC(todolistId))
     }, [])
@@ -42,10 +42,10 @@ export const useTasks: useTasksType = (todolistFilter, todolistId) => {
         }
         default:
     }
-    const onRemoveTask = useCallback<onRemoveTaskType>((id) => dispatch(removeTaskAC(todolistId, id)), [removeTaskAC]);
-    const onChangeStatus = useCallback<onChangeStatusType>((id, status) => dispatch(changeStatusAC(todolistId, id, status)), [changeStatusAC]);
-    const onChangeTitleTask = useCallback<onChangeTitleTaskType>((id: string, title: string) => dispatch(changeTitleTaskAC(todolistId, id, title)), [changeTitleTaskAC]);
-    const onSetTitle = useCallback<onSetTitleType>((title) => { dispatch(addTaskAC(todolistId, title)) }, [addTaskAC]);
+    const onRemoveTask = useCallback<onRemoveTaskType>((id) => dispatch(taskReducer.actions.removeTaskAC({ todolistId, taskId: id })), [taskReducer.actions.removeTaskAC]);
+    const onChangeStatus = useCallback<onChangeStatusType>((id, status) => dispatch(taskReducer.actions.changeStatusAC({ todolistId, taskId: id, status })), [taskReducer.actions.changeStatusAC]);
+    const onChangeTitleTask = useCallback<onChangeTitleTaskType>((id: string, title: string) => dispatch(taskReducer.actions.changeTitleTaskAC({ todolistId, taskId: id, title })), [taskReducer.actions.changeStatusAC]);
+    const onSetTitle = useCallback<onSetTitleType>((title) => { dispatch(taskReducer.actions.addTaskAC({ todolistId, title })) }, [taskReducer.actions.changeStatusAC]);
 
     const taskList = useMemo<ReactElement[]>(
         () => tasks.map(({

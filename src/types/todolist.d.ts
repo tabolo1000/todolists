@@ -1,3 +1,4 @@
+import { TodolistType } from "../api/todolistAPI/Todolist_API_inteface";
 import { TaskType } from "./Task";
 
 export type FilterType = "All" | "Active" | "Completed";

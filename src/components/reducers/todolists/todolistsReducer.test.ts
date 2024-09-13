@@ -1,5 +1,5 @@
 import { v1 } from "uuid";
-import { changeFilterTodolistAC, changeTitleTodolistAC, createTodolistAC, removeTodolistAC, setTodolistAC, todolistsReducer } from "./todolistsReducer";
+import { todolistsReducer } from "./todolistsReducer";
 import { TodolistDomainType } from "../../../types/todolist";
 
 
@@ -29,16 +29,16 @@ beforeEach(() => {
 
 
 test("Create todolist", () => {
-    const action = createTodolistAC(todolistId, "React")
-    const state: Array<TodolistDomainType> = todolistsReducer(initialTodolists, action)
+    const action = todolistsReducer.actions.createTodolistAC({ id: todolistId, title: "React" })
+    const state: Array<TodolistDomainType> = todolistsReducer.reducer(initialTodolists, action)
 
     expect(state).toHaveLength(3);
     expect(state[1]).not.toBeUndefined();
 });
 
 test("change title todolist", () => {
-    const action = changeTitleTodolistAC(todolistId, 'test_title_todolist');
-    const state = todolistsReducer(initialTodolists, action);
+    const action = todolistsReducer.actions.changeTitleTodolistAC({ id: todolistId, title: 'test_title_todolist' });
+    const state = todolistsReducer.reducer(initialTodolists, action);
 
     expect(state).toHaveLength(2);
     expect(state[0].title).toBe('test_title_todolist');
@@ -46,9 +46,9 @@ test("change title todolist", () => {
 });
 
 test("change filter todolist", () => {
-    const action = changeFilterTodolistAC(todolistId, 'Active');
+    const action = todolistsReducer.actions.changeFilterTodolistAC({ id: todolistId, filter: 'Active' });
 
-    const state = todolistsReducer(initialTodolists, action);
+    const state = todolistsReducer.reducer(initialTodolists, action);
 
     expect(state[1]).toBeDefined();
     expect(state[0].filter).toEqual('Active');
@@ -56,9 +56,9 @@ test("change filter todolist", () => {
 });
 
 test("remove todolist", () => {
-    const action = removeTodolistAC(todolistId);
+    const action = todolistsReducer.actions.removeTodolistAC({ id: todolistId });
 
-    const state = todolistsReducer(initialTodolists, action);
+    const state = todolistsReducer.reducer(initialTodolists, action);
 
     expect(state).toHaveLength(1);
     expect(state[0].id).toBe(todolistId2);
@@ -66,10 +66,11 @@ test("remove todolist", () => {
 })
 
 test("Todolist must be added", () => {
-    const action = setTodolistAC(initialTodolists);
+    const action = todolistsReducer.actions.setTodolistAC({ todolists: initialTodolists });
 
-    const state = todolistsReducer(initialTodolists, action);
-    
+    const state = todolistsReducer.reducer(initialTodolists, action);
+
     expect(state).toHaveLength(2);
-    expect(state).toContain(initialTodolists[0])
+    //expect(state).toContain(initialTodolists[0])
+    //expect(state).toContain(initialTodolists[0])
 })

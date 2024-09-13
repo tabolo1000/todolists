@@ -15,7 +15,7 @@ export const Tasks: FC<TasksProps> = memo(({
     todolistFilter,
     todolistId,
 }) => {
-
+   
     const {
         taskList,
         onSetTitle,

@@ -1,6 +1,6 @@
 import { v1 } from "uuid"
-import { createTodolistAC, removeTodolistAC, todolistsReducer } from "../todolists/todolistsReducer";
-import { addTaskAC, changeStatusAC, changeTitleTaskAC, removeTaskAC, setTaskAC, setTodolistTaskAC, TaskPriorities, taskReducer, TaskStatus } from "./tasksReducer";
+import { todolistsReducer } from "../todolists/todolistsReducer";
+import { TaskPriorities, taskReducer, TaskStatus } from "./tasksReducer";
 import { TasksDomainType } from "../../../types/Task";
 import { TodolistDomainType } from "../../../types/todolist";
 
@@ -146,12 +146,12 @@ beforeEach(() => {
 
 
 test("add tasks for new todolist", () => {
-    const actionTodolist = createTodolistAC(todoListId, "React");
-    const stateTodolist: Array<TodolistDomainType> = todolistsReducer(initialTodolists, actionTodolist);
+    const actionTodolist = todolistsReducer.actions.createTodolistAC({ id: todoListId, title: "React" });
+    const stateTodolist: Array<TodolistDomainType> = todolistsReducer.reducer(initialTodolists, actionTodolist);
     const id = stateTodolist[2].id;
 
-    const actionTasks = setTodolistTaskAC(id)
-    const stateTasks: TasksDomainType = taskReducer(initialTasks, actionTasks)
+    const actionTasks = todolistsReducer.actions.setTodolistAC({ todolists: initialTodolists })
+    const stateTasks: TasksDomainType = taskReducer.reducer(initialTasks, actionTasks)
 
     expect(stateTasks[id]).not.toBeUndefined();
     expect(stateTasks[id]).toHaveLength(0);
@@ -160,18 +160,18 @@ test("add tasks for new todolist", () => {
 
 
 test("create task to list task", () => {
-    const action = addTaskAC(todoListId, "test_title")
-    let { [todoListId]: firstList }: TasksDomainType = taskReducer(initialTasks, action)
+    const action = taskReducer.actions.addTaskAC({ todolistId: todoListId, title: "test_title" })
+    let { [todoListId]: firstList }: TasksDomainType = taskReducer.reducer(initialTasks, action)
 
     expect(firstList).toHaveLength(5);
     expect(firstList).not.toBeUndefined();
-    expect(firstList[4].title).toEqual("test_title");
+    expect(firstList[0].title).toEqual("test_title");
 });
 
 
 test("delete the task", () => {
-    const action = removeTaskAC(todoListId, "1");
-    const { [todoListId]: firstList }: TasksDomainType  = taskReducer(initialTasks, action);
+    const action = taskReducer.actions.removeTaskAC({ todolistId: todoListId, taskId: "1" });
+    const { [todoListId]: firstList }: TasksDomainType = taskReducer.reducer(initialTasks, action);
 
 
     expect(firstList).toHaveLength(3);
@@ -182,8 +182,8 @@ test("delete the task", () => {
 
 
 test("change status in task", () => {
-    const action = changeStatusAC(todoListId, "2", TaskStatus.Completed);
-    const { [todoListId]: firstTodolist }: TasksDomainType  = taskReducer(initialTasks, action);
+    const action = taskReducer.actions.changeStatusAC({ todolistId: todoListId, taskId: "2", status: TaskStatus.Completed });
+    const { [todoListId]: firstTodolist }: TasksDomainType = taskReducer.reducer(initialTasks, action);
 
     expect(firstTodolist[1].status).toBe(TaskStatus.Completed);
     expect(firstTodolist[1].id).toBe("2");
@@ -191,8 +191,8 @@ test("change status in task", () => {
 });
 
 test("change title task", () => {
-    const action = changeTitleTaskAC(todoListId, "3", "change_title_test");
-    const { [todoListId]: firstTodolist }: TasksDomainType  = taskReducer(initialTasks, action)
+    const action = taskReducer.actions.changeTitleTaskAC({ todolistId: todoListId, taskId: "3", title: "change_title_test" });
+    const { [todoListId]: firstTodolist }: TasksDomainType = taskReducer.reducer(initialTasks, action)
 
     expect(firstTodolist[2].title).toBe("change_title_test");
     expect(firstTodolist).toHaveLength(4);
@@ -202,17 +202,17 @@ test("change title task", () => {
 
 
 test("delete todolist task", () => {
-    const action = removeTodolistAC(todoListId);
+    const action = todolistsReducer.actions.removeTodolistAC({ id: todoListId });
 
-    const state = taskReducer(initialTasks, action);
+    const state = taskReducer.reducer(initialTasks, action);
 
     expect(state[todoListId]).not.toBeDefined();
     expect(state[todoListId2]).toBeDefined();
 })
-test("Must be add task for todolist", ()=> {
-    const action = setTaskAC(todoListId, initialTasks[todoListId]);
+test("Must be add task for todolist", () => {
+    const action = taskReducer.actions.setTaskAC({ todoListId: todoListId, tasks: initialTasks[todoListId] })
 
-    const state = taskReducer(initialTasks, action);
+    const state = taskReducer.reducer(initialTasks, action);
 
     expect(state[todoListId]).toBeDefined()
 })
